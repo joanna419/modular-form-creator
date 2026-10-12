@@ -10,49 +10,61 @@ lifecycle (`draft` → `completed`).
 modular-form-creator/
 ├── backend/            # Provided Express + MongoDB API (not modified)
 ├── frontend/           # React + TypeScript + Vite app (the assignment work)
-├── docker-compose.yml  # Backend + MongoDB stack
+├── docker-compose.yml  # Full stack: frontend + backend + MongoDB
 └── README.md
 ```
 
 - Backend API contract: [backend/README.md](backend/README.md)
 - Frontend stack: React 19, TypeScript, Vite, React Router, styled-components,
-  TanStack Query.
+  TanStack Query, React Hook Form.
 
 ## Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for the backend + MongoDB)
-- Node.js 20+ and npm (for the frontend)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- Node.js 22+ and npm (only for running the frontend outside Docker)
 
-## 1. Start the backend
+## Quick start: full stack in Docker
 
 From the repository root:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-This starts the backend and MongoDB.
+| Service | URL |
+| --- | --- |
+| Frontend | `http://localhost:5173` |
+| Backend API | `http://localhost:5001` |
+| Swagger UI | `http://localhost:5001/docs` |
 
-- API base URL: `http://localhost:5001`
-- Swagger UI: `http://localhost:5001/docs`
+The frontend image is a multi-stage build: Node builds the app (type-check +
+Vite build), nginx serves the static bundle with an SPA fallback so deep links
+such as `/resources/3` work on refresh. The API URL is baked in at build time
+(`VITE_API_URL` build arg) and points at the backend's published port, because
+requests are sent by the browser on the host — not by the frontend container.
 
-Stop the stack with:
+Stop everything with:
 
 ```bash
 docker compose down
 ```
 
-## 2. Start the frontend
+## Local development (frontend outside Docker)
+
+Start only the backend and MongoDB, then the Vite dev server:
 
 ```bash
+docker compose up -d backend
 cd frontend
 npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:5173` and talks to the backend at the URL in
-`VITE_API_URL` (defaults to `http://localhost:5001`). To override it, copy the
-example env file and edit the value:
+The dev server also uses port `5173` (the backend's allowed CORS origin), so stop
+the frontend container first if it is running: `docker compose stop frontend`.
+
+The app talks to the backend at `VITE_API_URL` (defaults to
+`http://localhost:5001`). To override it, copy the example env file and edit it:
 
 ```bash
 cp .env.example .env
