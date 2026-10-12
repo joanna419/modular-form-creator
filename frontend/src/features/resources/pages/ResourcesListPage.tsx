@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { ApiError, type Resource, type ResourceListParams } from '../../../api'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { CreateResourceForm } from '../components/CreateResourceForm'
+import { PageState } from '../components/PageState'
 import { Pagination } from '../components/Pagination'
 import {
   ResourceFilters,
@@ -65,15 +66,15 @@ export function ResourcesListPage() {
       />
 
       {isPending ? (
-        <State>Loading resources…</State>
+        <PageState>Loading resources…</PageState>
       ) : isError ? (
-        <State role="alert">
+        <PageState role="alert">
           {error instanceof ApiError
             ? error.message
             : 'Failed to load resources.'}
-        </State>
+        </PageState>
       ) : items.length === 0 ? (
-        <State>No resources found.</State>
+        <PageState>No resources found.</PageState>
       ) : (
         <List>
           {items.map((resource) => (
@@ -122,10 +123,4 @@ const List = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
-`
-
-const State = styled.p`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  padding: ${({ theme }) => theme.spacing.xl} 0;
-  text-align: center;
 `

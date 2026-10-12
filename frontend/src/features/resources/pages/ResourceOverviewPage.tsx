@@ -6,6 +6,7 @@ import { Button } from '../../../design-system'
 import { paths } from '../../../routes/paths'
 import { ConfirmDialog } from '../components/ConfirmDialog'
 import { ModuleCard } from '../components/ModuleCard'
+import { PageState } from '../components/PageState'
 import { StatusBadge } from '../components/StatusBadge'
 import { useResource } from '../hooks/useResource'
 import { useProvisionResource } from '../hooks/useResourceMutations'
@@ -23,12 +24,12 @@ export function ResourceOverviewPage() {
   const { data: resource, isPending, isError, error } = useResource(resourceId)
   const provision = useProvisionResource()
 
-  if (isPending) return <State>Loading resource…</State>
+  if (isPending) return <PageState>Loading resource…</PageState>
   if (isError) {
     return (
-      <State role="alert">
+      <PageState role="alert">
         {error instanceof ApiError ? error.message : 'Failed to load resource.'}
-      </State>
+      </PageState>
     )
   }
 
@@ -155,10 +156,4 @@ const Provisioning = styled.div`
 const Hint = styled.span`
   color: ${({ theme }) => theme.colors.inkMuted};
   font-size: 0.875rem;
-`
-
-const State = styled.p`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  padding: ${({ theme }) => theme.spacing.xl} 0;
-  text-align: center;
 `
