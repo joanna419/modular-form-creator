@@ -19,3 +19,6 @@ export const TEAM_MEMBER_OPTIONS: TeamMember[] = [
   'Data Eng',
   'Product Owner',
 ]
+
+export const COMPLETED_EDIT_NOTICE =
+  'This resource is completed. Changes are kept locally and sent only when you submit them on the overview.'

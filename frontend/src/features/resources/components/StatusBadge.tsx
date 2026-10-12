@@ -1,10 +1,7 @@
 import type { ResourceStatus } from '@/api'
 import { Badge, type BadgeVariant } from '@/design-system'
 
-const STATUS_BADGE: Record<
-  ResourceStatus,
-  { variant: BadgeVariant; label: string }
-> = {
+const STATUS_BADGE: Record<ResourceStatus, { variant: BadgeVariant; label: string }> = {
   draft: { variant: 'neutral', label: 'Draft' },
   completed: { variant: 'success', label: 'Completed' },
 }

@@ -18,18 +18,13 @@ interface ErrorBody {
   details?: unknown
 }
 
-export const request = async <T>(
-  path: string,
-  init?: RequestInit,
-): Promise<T> => {
+export const request = async <T>(path: string, init?: RequestInit): Promise<T> => {
   const response = await fetch(`${BASE_URL}${path}`, {
     headers: { 'Content-Type': 'application/json' },
     ...init,
   })
 
-  const isJson = response.headers
-    .get('content-type')
-    ?.includes('application/json')
+  const isJson = response.headers.get('content-type')?.includes('application/json')
   const body = isJson ? await response.json() : undefined
 
   if (!response.ok) {

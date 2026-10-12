@@ -4,12 +4,7 @@ export type Priority = 'low' | 'medium' | 'high'
 
 export type ProjectCategory = 'internal' | 'external' | 'vendor'
 
-export type TeamMember =
-  | 'FE devs'
-  | 'BE devs'
-  | 'Designer'
-  | 'Data Eng'
-  | 'Product Owner'
+export type TeamMember = 'FE devs' | 'BE devs' | 'Designer' | 'Data Eng' | 'Product Owner'
 
 export interface BasicInfo {
   resourceName: string

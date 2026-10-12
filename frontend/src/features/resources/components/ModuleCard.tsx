@@ -6,6 +6,8 @@ interface ModuleCardProps {
   isComplete: boolean
   actionLabel: string
   onEdit: () => void
+  /** Module has buffered (not yet submitted) edits. */
+  isEdited?: boolean
   locked?: boolean
   lockedReason?: string
 }
@@ -15,15 +17,19 @@ export const ModuleCard = ({
   isComplete,
   actionLabel,
   onEdit,
+  isEdited = false,
   locked = false,
   lockedReason,
 }: ModuleCardProps) => (
   <Card variant="outline">
     <Header>
       <Title>{title}</Title>
-      <Badge variant={isComplete ? 'success' : 'neutral'}>
-        {isComplete ? 'Complete' : 'Incomplete'}
-      </Badge>
+      <Badges>
+        {isEdited && <Badge variant="warning">Edited</Badge>}
+        <Badge variant={isComplete ? 'success' : 'neutral'}>
+          {isComplete ? 'Complete' : 'Incomplete'}
+        </Badge>
+      </Badges>
     </Header>
 
     {locked && lockedReason && <LockNote>{lockedReason}</LockNote>}
@@ -44,6 +50,11 @@ const Header = styled.div`
 
 const Title = styled.h2`
   font-size: 1.125rem;
+`
+
+const Badges = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.sm};
 `
 
 const LockNote = styled.p`

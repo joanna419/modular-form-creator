@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components'
 import { queryClient } from '@/app/queryClient'
 import { GlobalStyles } from '@/design-system/theme/GlobalStyles'
 import { theme } from '@/design-system/theme/theme'
+import { EditBufferProvider } from '@/features/resources/context/EditBufferProvider'
 import { router } from '@/routes/router'
 
 createRoot(document.getElementById('root')!).render(
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <EditBufferProvider>
+          <RouterProvider router={router} />
+        </EditBufferProvider>
       </QueryClientProvider>
     </ThemeProvider>
   </StrictMode>,

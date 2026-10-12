@@ -22,7 +22,8 @@ interface BasicInfoFormProps {
   defaultValues: BasicInfoFormValues
   submitLabel: string
   isSubmitting: boolean
-  onSubmit: (values: BasicInfo) => void
+  /** `isDirty` tells whether any field differs from `defaultValues`. */
+  onSubmit: (values: BasicInfo, isDirty: boolean) => void
 }
 
 const PRIORITY_SELECT_OPTIONS = [
@@ -37,18 +38,25 @@ export const BasicInfoForm = ({
   isSubmitting,
   onSubmit,
 }: BasicInfoFormProps) => {
-  const { control, handleSubmit } = useForm<BasicInfoFormValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<BasicInfoFormValues>({
     defaultValues,
   })
 
   const submit = handleSubmit((values) => {
-    onSubmit({
-      resourceName,
-      owner: values.owner.trim(),
-      email: values.email.trim(),
-      description: values.description.trim(),
-      priority: values.priority as Priority,
-    })
+    onSubmit(
+      {
+        resourceName,
+        owner: values.owner.trim(),
+        email: values.email.trim(),
+        description: values.description.trim(),
+        priority: values.priority as Priority,
+      },
+      isDirty,
+    )
   })
 
   return (

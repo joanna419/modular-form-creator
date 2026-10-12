@@ -11,6 +11,7 @@ import {
   type StatusFilter,
 } from '@/features/resources/components/ResourceFilters'
 import { useDebouncedValue } from '@/features/resources/hooks/useDebouncedValue'
+import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
 import { useDeleteResource } from '@/features/resources/hooks/useResourceMutations'
 import { useResources } from '@/features/resources/hooks/useResources'
 import { getErrorMessage } from '@/features/resources/lib/errors'
@@ -21,9 +22,7 @@ export const ResourcesListPage = () => {
   const [nameInput, setNameInput] = useState('')
   const [status, setStatus] = useState<StatusFilter>('')
   const [page, setPage] = useState(1)
-  const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(
-    null,
-  )
+  const [resourceToDelete, setResourceToDelete] = useState<Resource | null>(null)
 
   const debouncedName = useDebouncedValue(nameInput)
 
@@ -37,11 +36,16 @@ export const ResourcesListPage = () => {
 
   const { data, isPending, isError, error } = useResources(params)
   const deleteResource = useDeleteResource()
+  const buffer = useEditBuffer()
 
   const confirmDelete = () => {
     if (!resourceToDelete) return
-    deleteResource.mutate(String(resourceToDelete.resourceId), {
-      onSuccess: () => setResourceToDelete(null),
+    const id = String(resourceToDelete.resourceId)
+    deleteResource.mutate(id, {
+      onSuccess: () => {
+        buffer.clearEdits(id) // drop edits of a resource that no longer exists
+        setResourceToDelete(null)
+      },
     })
   }
 
@@ -99,9 +103,8 @@ export const ResourcesListPage = () => {
         title="Delete resource"
         message={
           <>
-            Are you sure you want to delete{' '}
-            <strong>{resourceToDelete?.name}</strong>? This action cannot be
-            undone.
+            Are you sure you want to delete <strong>{resourceToDelete?.name}</strong>?
+            This action cannot be undone.
           </>
         }
         confirmLabel="Delete"

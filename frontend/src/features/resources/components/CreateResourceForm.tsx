@@ -24,8 +24,7 @@ export const CreateResourceForm = () => {
         setName('')
         setError(null)
       },
-      onError: (err) =>
-        setError(getErrorMessage(err, 'Failed to create resource')),
+      onError: (err) => setError(getErrorMessage(err, 'Failed to create resource')),
     })
   }
 

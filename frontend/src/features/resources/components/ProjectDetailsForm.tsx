@@ -2,14 +2,8 @@ import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
 import type { ProjectCategory, ProjectDetails, TeamMember } from '@/api'
 import { Button, CheckboxGroup, Input, Select } from '@/design-system'
-import {
-  CATEGORY_OPTIONS,
-  TEAM_MEMBER_OPTIONS,
-} from '@/features/resources/lib/constants'
-import {
-  validateBudget,
-  validateProjectName,
-} from '@/features/resources/lib/validation'
+import { CATEGORY_OPTIONS, TEAM_MEMBER_OPTIONS } from '@/features/resources/lib/constants'
+import { validateBudget, validateProjectName } from '@/features/resources/lib/validation'
 
 export interface ProjectDetailsFormValues {
   projectName: string
@@ -22,7 +16,8 @@ interface ProjectDetailsFormProps {
   defaultValues: ProjectDetailsFormValues
   submitLabel: string
   isSubmitting: boolean
-  onSubmit: (values: ProjectDetails) => void
+  /** `isDirty` tells whether any field differs from `defaultValues`. */
+  onSubmit: (values: ProjectDetails, isDirty: boolean) => void
 }
 
 const CATEGORY_SELECT_OPTIONS = [
@@ -36,17 +31,24 @@ export const ProjectDetailsForm = ({
   isSubmitting,
   onSubmit,
 }: ProjectDetailsFormProps) => {
-  const { control, handleSubmit } = useForm<ProjectDetailsFormValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm<ProjectDetailsFormValues>({
     defaultValues,
   })
 
   const submit = handleSubmit((values) => {
-    onSubmit({
-      projectName: values.projectName.trim(),
-      budget: values.budget.trim(),
-      category: values.category as ProjectCategory,
-      options: values.options,
-    })
+    onSubmit(
+      {
+        projectName: values.projectName.trim(),
+        budget: values.budget.trim(),
+        category: values.category as ProjectCategory,
+        options: values.options,
+      },
+      isDirty,
+    )
   })
 
   return (
@@ -105,8 +107,7 @@ export const ProjectDetailsForm = ({
         name="options"
         control={control}
         rules={{
-          validate: (value) =>
-            value.length > 0 || 'Select at least one team member',
+          validate: (value) => value.length > 0 || 'Select at least one team member',
         }}
         render={({ field, fieldState }) => (
           <CheckboxGroup

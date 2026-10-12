@@ -35,10 +35,7 @@ export const createResource = (resourceName: string): Promise<Resource> =>
     body: JSON.stringify({ resourceName }),
   })
 
-export const updateBasicInfo = (
-  id: string,
-  data: BasicInfo,
-): Promise<Resource> =>
+export const updateBasicInfo = (id: string, data: BasicInfo): Promise<Resource> =>
   request<Resource>(`${BASE}/${id}/basic-info`, {
     method: 'PATCH',
     body: JSON.stringify(data),
@@ -60,10 +57,7 @@ export const provisionResource = (
   request(`${BASE}/${id}/provisioning`, { method: 'PATCH' })
 
 /** Full replace, allowed only for completed resources. */
-export const replaceResource = (
-  id: string,
-  data: ResourcePayload,
-): Promise<Resource> =>
+export const replaceResource = (id: string, data: ResourcePayload): Promise<Resource> =>
   request<Resource>(`${BASE}/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),

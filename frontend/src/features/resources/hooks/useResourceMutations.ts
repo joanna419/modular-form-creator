@@ -3,10 +3,12 @@ import {
   createResource,
   deleteResource,
   provisionResource,
+  replaceResource,
   updateBasicInfo,
   updateProjectDetails,
   type BasicInfo,
   type ProjectDetails,
+  type ResourcePayload,
 } from '@/api'
 import { resourceKeys } from '@/features/resources/hooks/keys'
 
@@ -52,6 +54,15 @@ export const useUpdateProjectDetails = (id: string) => {
   const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (data: ProjectDetails) => updateProjectDetails(id, data),
+    onSuccess: invalidate,
+  })
+}
+
+/** Full update of a completed resource (submits the edit buffer). */
+export const useReplaceResource = (id: string) => {
+  const invalidate = useInvalidateResources()
+  return useMutation({
+    mutationFn: (data: ResourcePayload) => replaceResource(id, data),
     onSuccess: invalidate,
   })
 }
