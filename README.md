@@ -74,8 +74,15 @@ Run these from `frontend/`:
 
 ```bash
 npm run dev        # start the dev server
-npm run build      # type-check (tsc -b) + production build
 npm run lint       # ESLint
+npm run typecheck  # TypeScript (tsc -b)
+npm run build      # type-check + production build
 npm run preview    # preview the production build
 npm run storybook  # design system stories
 ```
+
+## Pre-commit checks
+
+A [Husky](https://typicode.github.io/husky/) pre-commit hook runs `lint`,
+`typecheck` and `build` before every commit and blocks the commit if any of
+them fails. It is installed automatically by `npm install` in `frontend/`.
