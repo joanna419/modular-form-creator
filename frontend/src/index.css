@@ -1,26 +1,3 @@
-/*
- * Tailwind without preflight: the design system's GlobalStyles owns the reset.
- * Utilities are imported unlayered on purpose — GlobalStyles is unlayered too
- * (e.g. `a { color: inherit }`, `h1, p { margin: 0 }`), and unlayered rules
- * always beat layered ones. Unlayered, plain specificity applies: class > element.
- */
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/utilities.css';
-
-@theme {
-  --color-ink-strong: #12212b;
-  --color-ink: #2a3a45;
-  --color-ink-muted: #5e6c76;
-  --color-surface: #ffffff;
-  --color-surface-alt: #f5f4f0;
-  --color-border: #d6dde1;
-  --color-primary: #1f7a8c;
-  --color-primary-strong: #155c69;
-  --color-success: #2e8b57;
-  --color-warning: #b4471b;
-  --font-heading: 'Space Grotesk', 'Segoe UI', sans-serif;
-}
-
 :root {
   font: 18px/145% system-ui, 'Segoe UI', Roboto, sans-serif;
   color-scheme: light dark;

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import { ApiError, type BasicInfo } from '@/api'
 import { BasicInfoForm } from '@/features/resources/components/BasicInfoForm'
 import { PageState } from '@/features/resources/components/PageState'
@@ -42,18 +43,9 @@ export const BasicInfoPage = () => {
 
   return (
     <>
-      <Link
-        to={paths.resource(resourceId)}
-        className="mb-6 inline-block text-ink-muted"
-      >
-        ← Back to overview
-      </Link>
-      <h1 className="mb-6">Basic Info</h1>
-      {submitError && (
-        <p role="alert" className="mb-4 text-warning">
-          {submitError}
-        </p>
-      )}
+      <BackLink to={paths.resource(resourceId)}>← Back to overview</BackLink>
+      <Title>Basic Info</Title>
+      {submitError && <SubmitError role="alert">{submitError}</SubmitError>}
       <BasicInfoForm
         resourceName={resource.basicInfo.resourceName || resource.name}
         defaultValues={{
@@ -69,3 +61,18 @@ export const BasicInfoPage = () => {
     </>
   )
 }
+
+const BackLink = styled(Link)`
+  display: inline-block;
+  color: ${({ theme }) => theme.colors.inkMuted};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const Title = styled.h1`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const SubmitError = styled.p`
+  color: ${({ theme }) => theme.colors.warning};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`

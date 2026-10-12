@@ -1,4 +1,5 @@
 import { Controller, useForm } from 'react-hook-form'
+import styled from 'styled-components'
 import type { BasicInfo, Priority } from '@/api'
 import { Button, Input, Select } from '@/design-system'
 import { PRIORITY_OPTIONS } from '@/features/resources/lib/constants'
@@ -51,7 +52,7 @@ export const BasicInfoForm = ({
   })
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4">
+    <Form onSubmit={submit}>
       <Input label="Resource name" value={resourceName} disabled />
 
       <Controller
@@ -120,11 +121,22 @@ export const BasicInfoForm = ({
         )}
       />
 
-      <div className="flex justify-end">
+      <Actions>
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving…' : submitLabel}
         </Button>
-      </div>
-    </form>
+      </Actions>
+    </Form>
   )
 }
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import type { Resource } from '@/api'
 import { Card, IconButton } from '@/design-system'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
@@ -20,17 +21,12 @@ const TrashIcon = () => (
 
 export const ResourceCard = ({ resource, onDelete }: ResourceCardProps) => (
   <Card variant="outline">
-    <div className="flex items-center justify-between gap-4">
-      <Link
-        to={paths.resource(resource.resourceId)}
-        className="flex min-w-0 items-baseline gap-2"
-      >
-        <span className="truncate font-semibold text-ink-strong">
-          {resource.name}
-        </span>
-        <span className="text-sm text-ink-muted">#{resource.resourceId}</span>
-      </Link>
-      <div className="flex shrink-0 items-center gap-4">
+    <Row>
+      <TextLink to={paths.resource(resource.resourceId)}>
+        <Name>{resource.name}</Name>
+        <Id>#{resource.resourceId}</Id>
+      </TextLink>
+      <Actions>
         <StatusBadge status={resource.status} />
         <IconButton
           variant="ghost"
@@ -39,7 +35,41 @@ export const ResourceCard = ({ resource, onDelete }: ResourceCardProps) => (
         >
           <TrashIcon />
         </IconButton>
-      </div>
-    </div>
+      </Actions>
+    </Row>
   </Card>
 )
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.md};
+`
+
+const TextLink = styled(Link)`
+  display: flex;
+  align-items: baseline;
+  gap: ${({ theme }) => theme.spacing.sm};
+  min-width: 0;
+`
+
+const Name = styled.span`
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.inkStrong};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+const Id = styled.span`
+  color: ${({ theme }) => theme.colors.inkMuted};
+  font-size: 0.875rem;
+`
+
+const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.md};
+  flex-shrink: 0;
+`

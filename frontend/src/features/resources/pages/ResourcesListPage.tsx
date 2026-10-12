@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import styled from 'styled-components'
 import { ApiError, type Resource, type ResourceListParams } from '@/api'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { CreateResourceForm } from '@/features/resources/components/CreateResourceForm'
@@ -47,7 +48,7 @@ export const ResourcesListPage = () => {
 
   return (
     <>
-      <h1 className="mb-6">Resources</h1>
+      <Title>Resources</Title>
 
       <CreateResourceForm />
 
@@ -75,7 +76,7 @@ export const ResourcesListPage = () => {
       ) : items.length === 0 ? (
         <PageState>No resources found.</PageState>
       ) : (
-        <div className="flex flex-col gap-4">
+        <List>
           {items.map((resource) => (
             <ResourceCard
               key={resource._id}
@@ -83,7 +84,7 @@ export const ResourcesListPage = () => {
               onDelete={setResourceToDelete}
             />
           ))}
-        </div>
+        </List>
       )}
 
       {data && (
@@ -113,3 +114,13 @@ export const ResourcesListPage = () => {
     </>
   )
 }
+
+const Title = styled.h1`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const List = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`

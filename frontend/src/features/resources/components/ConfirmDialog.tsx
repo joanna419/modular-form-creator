@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import styled from 'styled-components'
 import { Button, Drawer } from '@/design-system'
 
 interface ConfirmDialogProps {
@@ -23,14 +24,25 @@ export const ConfirmDialog = ({
   onClose,
 }: ConfirmDialogProps) => (
   <Drawer title={title} isOpen={isOpen} onClose={onClose}>
-    <div className="mb-6 text-ink">{message}</div>
-    <div className="flex justify-end gap-2">
+    <Message>{message}</Message>
+    <Actions>
       <Button variant="ghost" onClick={onClose} disabled={isBusy}>
         Cancel
       </Button>
       <Button onClick={onConfirm} disabled={isBusy}>
         {isBusy && busyLabel ? busyLabel : confirmLabel}
       </Button>
-    </div>
+    </Actions>
   </Drawer>
 )
+
+const Message = styled.div`
+  color: ${({ theme }) => theme.colors.ink};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const Actions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: ${({ theme }) => theme.spacing.sm};
+`

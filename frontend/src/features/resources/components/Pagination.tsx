@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import { Button } from '@/design-system'
 
 interface PaginationProps {
@@ -14,7 +15,7 @@ export const Pagination = ({
   if (totalPages <= 1) return null
 
   return (
-    <div className="mt-6 flex items-center justify-center gap-4">
+    <Bar>
       <Button
         variant="secondary"
         disabled={page <= 1}
@@ -22,9 +23,9 @@ export const Pagination = ({
       >
         Previous
       </Button>
-      <span className="text-sm text-ink-muted">
+      <PageInfo>
         Page {page} of {totalPages}
-      </span>
+      </PageInfo>
       <Button
         variant="secondary"
         disabled={page >= totalPages}
@@ -32,6 +33,19 @@ export const Pagination = ({
       >
         Next
       </Button>
-    </div>
+    </Bar>
   )
 }
+
+const Bar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.lg};
+`
+
+const PageInfo = styled.span`
+  color: ${({ theme }) => theme.colors.inkMuted};
+  font-size: 0.875rem;
+`

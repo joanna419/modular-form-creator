@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import { Badge, Button, Card } from '@/design-system'
 
 interface ModuleCardProps {
@@ -18,19 +19,35 @@ export const ModuleCard = ({
   lockedReason,
 }: ModuleCardProps) => (
   <Card variant="outline">
-    <div className="mb-4 flex items-center justify-between gap-4">
-      <h2 className="text-lg">{title}</h2>
+    <Header>
+      <Title>{title}</Title>
       <Badge variant={isComplete ? 'success' : 'neutral'}>
         {isComplete ? 'Complete' : 'Incomplete'}
       </Badge>
-    </div>
+    </Header>
 
-    {locked && lockedReason && (
-      <p className="mb-4 text-sm text-ink-muted">{lockedReason}</p>
-    )}
+    {locked && lockedReason && <LockNote>{lockedReason}</LockNote>}
 
     <Button variant="secondary" onClick={onEdit} disabled={locked}>
       {actionLabel}
     </Button>
   </Card>
 )
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
+
+const Title = styled.h2`
+  font-size: 1.125rem;
+`
+
+const LockNote = styled.p`
+  color: ${({ theme }) => theme.colors.inkMuted};
+  font-size: 0.875rem;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+`
