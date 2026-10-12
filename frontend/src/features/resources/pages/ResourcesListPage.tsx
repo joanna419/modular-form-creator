@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import styled from 'styled-components'
 import type { Resource, ResourceListParams } from '@/api'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
@@ -41,12 +42,15 @@ export const ResourcesListPage = () => {
 
   const confirmDelete = () => {
     if (!resourceToDelete) return
+    const { name } = resourceToDelete
     const id = String(resourceToDelete.resourceId)
     deleteResource.mutate(id, {
       onSuccess: () => {
         buffer.clearEdits(id) // drop edits of a resource that no longer exists
         setResourceToDelete(null)
+        toast.success(`Resource “${name}” deleted`)
       },
+      onError: (err) => toast.error(getErrorMessage(err, 'Failed to delete resource.')),
     })
   }
 

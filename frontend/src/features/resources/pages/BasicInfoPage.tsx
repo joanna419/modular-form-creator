@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import type { BasicInfo } from '@/api'
 import { BasicInfoForm } from '@/features/resources/components/BasicInfoForm'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
@@ -15,7 +15,6 @@ import { paths } from '@/routes/paths'
 export const BasicInfoPage = () => {
   const { resourceId = '' } = useParams()
   const navigate = useNavigate()
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { data: resource, isPending, isError, error } = useResource(resourceId)
   const update = useUpdateBasicInfo(resourceId)
@@ -44,11 +43,12 @@ export const BasicInfoPage = () => {
       return
     }
 
-    setSubmitError(null)
     update.mutate(data, {
-      onSuccess: backToOverview,
-      onError: (err) =>
-        setSubmitError(getErrorMessage(err, 'Failed to save Basic Info.')),
+      onSuccess: () => {
+        toast.success('Basic Info saved')
+        backToOverview()
+      },
+      onError: (err) => toast.error(getErrorMessage(err, 'Failed to save Basic Info.')),
     })
   }
 
@@ -56,7 +56,6 @@ export const BasicInfoPage = () => {
     <ModulePageLayout
       resourceId={resourceId}
       title="Basic Info"
-      submitError={submitError}
       notice={isCompleted ? COMPLETED_EDIT_NOTICE : undefined}
     >
       <BasicInfoForm

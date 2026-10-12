@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { toast } from 'sonner'
 import styled from 'styled-components'
 import { media } from '@/app/media'
 import { Button, Card, Input } from '@/design-system'
@@ -21,10 +22,12 @@ export const CreateResourceForm = () => {
     }
 
     create.mutate(name.trim(), {
-      onSuccess: () => {
+      onSuccess: (resource) => {
         setName('')
         setError(null)
+        toast.success(`Resource “${resource.name}” created`)
       },
+      // Server rejections here are about the name field (e.g. not unique): show inline.
       onError: (err) => setError(getErrorMessage(err, 'Failed to create resource')),
     })
   }

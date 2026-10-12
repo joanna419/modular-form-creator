@@ -7,17 +7,15 @@ import { paths } from '@/routes/paths'
 interface ModulePageLayoutProps {
   resourceId: string
   title: string
-  submitError: string | null
   /** Optional explanation shown above the form (e.g. buffered edit mode). */
   notice?: string
   children: ReactNode
 }
 
-/** Shared frame for module form pages: back link, title, notice, submit error. */
+/** Shared frame for module form pages: back link, title, optional notice. */
 export const ModulePageLayout = ({
   resourceId,
   title,
-  submitError,
   notice,
   children,
 }: ModulePageLayoutProps) => (
@@ -25,7 +23,6 @@ export const ModulePageLayout = ({
     <BackLink to={paths.resource(resourceId)}>← Back to overview</BackLink>
     <Title>{title}</Title>
     {notice && <Notice>{notice}</Notice>}
-    {submitError && <SubmitError role="alert">{submitError}</SubmitError>}
     <Card variant="elevated">{children}</Card>
   </>
 )
@@ -42,10 +39,5 @@ const Title = styled.h1`
 
 const Notice = styled.p`
   color: ${({ theme }) => theme.colors.info};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`
-
-const SubmitError = styled.p`
-  color: ${({ theme }) => theme.colors.warning};
   margin-bottom: ${({ theme }) => theme.spacing.md};
 `

@@ -5,14 +5,12 @@ import { Button } from '@/design-system'
 
 interface PendingChangesBarProps {
   isSubmitting: boolean
-  error: string | null
   onSubmit: () => void
   onDiscard: () => void
 }
 
 export const PendingChangesBar = ({
   isSubmitting,
-  error,
   onSubmit,
   onDiscard,
 }: PendingChangesBarProps) => (
@@ -21,7 +19,6 @@ export const PendingChangesBar = ({
       <strong>Unsaved changes.</strong> They are kept only in this tab and will be lost on
       refresh or close until you submit them.
     </Text>
-    {error && <ErrorText role="alert">{error}</ErrorText>}
     <Actions>
       <Button variant="ghost" onClick={onDiscard} disabled={isSubmitting}>
         Discard
@@ -47,10 +44,6 @@ const Bar = styled.div`
 
 const Text = styled.p`
   color: ${({ theme }) => theme.colors.ink};
-`
-
-const ErrorText = styled.p`
-  color: ${({ theme }) => theme.colors.warning};
 `
 
 const Actions = styled.div`

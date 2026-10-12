@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'sonner'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { media } from '@/app/media'
@@ -30,7 +31,6 @@ export const ResourceOverviewPage = () => {
   const { resourceId = '' } = useParams()
   const navigate = useNavigate()
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { data: resource, isPending, isError, error } = useResource(resourceId)
   const provision = useProvisionResource()
@@ -54,22 +54,28 @@ export const ResourceOverviewPage = () => {
 
   const confirmProvision = () => {
     provision.mutate(resourceId, {
-      onSuccess: () => setConfirmOpen(false),
+      onSuccess: () => {
+        setConfirmOpen(false)
+        toast.success(`“${resource.name}” is now completed`)
+      },
+      onError: (err) => toast.error(getErrorMessage(err, 'Failed to complete resource.')),
     })
   }
 
   // Explicit submit of the edit buffer: one full-update request.
   const submitChanges = () => {
-    setSubmitError(null)
     replace.mutate(buildReplacePayload(resource, edits), {
-      onSuccess: () => buffer.clearEdits(resourceId),
-      onError: (err) => setSubmitError(getErrorMessage(err, 'Failed to submit changes.')),
+      onSuccess: () => {
+        buffer.clearEdits(resourceId)
+        toast.success('Changes saved')
+      },
+      onError: (err) => toast.error(getErrorMessage(err, 'Failed to submit changes.')),
     })
   }
 
   const discardChanges = () => {
-    setSubmitError(null)
     buffer.clearEdits(resourceId)
+    toast('Changes discarded')
   }
 
   return (
@@ -90,7 +96,6 @@ export const ResourceOverviewPage = () => {
       {hasEdits && (
         <PendingChangesBar
           isSubmitting={replace.isPending}
-          error={submitError}
           onSubmit={submitChanges}
           onDiscard={discardChanges}
         />

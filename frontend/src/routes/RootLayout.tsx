@@ -1,11 +1,13 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import styled from 'styled-components'
+import { Toaster } from 'sonner'
+import styled, { useTheme } from 'styled-components'
 import { fadeInUp } from '@/app/animations'
 import { media } from '@/app/media'
 import { paths } from '@/routes/paths'
 
 export const RootLayout = () => {
   const { pathname } = useLocation()
+  const theme = useTheme()
 
   return (
     <>
@@ -21,6 +23,18 @@ export const RootLayout = () => {
       <Main key={pathname}>
         <Outlet />
       </Main>
+      {/* Action feedback (success / server errors). Field errors stay inline. */}
+      <Toaster
+        position="bottom-right"
+        richColors
+        closeButton
+        toastOptions={{
+          style: {
+            fontFamily: theme.typography.body,
+            borderRadius: theme.radii.md,
+          },
+        }}
+      />
     </>
   )
 }

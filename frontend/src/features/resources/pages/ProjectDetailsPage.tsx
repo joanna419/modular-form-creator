@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import type { ProjectDetails } from '@/api'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
 import { LoadingState } from '@/features/resources/components/LoadingState'
@@ -16,7 +16,6 @@ import { paths } from '@/routes/paths'
 export const ProjectDetailsPage = () => {
   const { resourceId = '' } = useParams()
   const navigate = useNavigate()
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { data: resource, isPending, isError, error } = useResource(resourceId)
   const update = useUpdateProjectDetails(resourceId)
@@ -50,11 +49,13 @@ export const ProjectDetailsPage = () => {
       return
     }
 
-    setSubmitError(null)
     update.mutate(data, {
-      onSuccess: backToOverview,
+      onSuccess: () => {
+        toast.success('Project Details saved')
+        backToOverview()
+      },
       onError: (err) =>
-        setSubmitError(getErrorMessage(err, 'Failed to save Project Details.')),
+        toast.error(getErrorMessage(err, 'Failed to save Project Details.')),
     })
   }
 
@@ -62,7 +63,6 @@ export const ProjectDetailsPage = () => {
     <ModulePageLayout
       resourceId={resourceId}
       title="Project Details"
-      submitError={submitError}
       notice={isCompleted ? COMPLETED_EDIT_NOTICE : undefined}
     >
       <ProjectDetailsForm
