@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import styled from 'styled-components'
 import { ApiError, type Resource, type ResourceListParams } from '../../../api'
+import { ConfirmDialog } from '../components/ConfirmDialog'
 import { CreateResourceForm } from '../components/CreateResourceForm'
-import { DeleteResourceDialog } from '../components/DeleteResourceDialog'
 import { Pagination } from '../components/Pagination'
 import {
   ResourceFilters,
@@ -94,9 +94,19 @@ export function ResourcesListPage() {
         />
       )}
 
-      <DeleteResourceDialog
-        resource={resourceToDelete}
-        isDeleting={deleteResource.isPending}
+      <ConfirmDialog
+        isOpen={resourceToDelete !== null}
+        title="Delete resource"
+        message={
+          <>
+            Are you sure you want to delete{' '}
+            <strong>{resourceToDelete?.name}</strong>? This action cannot be
+            undone.
+          </>
+        }
+        confirmLabel="Delete"
+        busyLabel="Deleting…"
+        isBusy={deleteResource.isPending}
         onConfirm={confirmDelete}
         onClose={() => setResourceToDelete(null)}
       />
