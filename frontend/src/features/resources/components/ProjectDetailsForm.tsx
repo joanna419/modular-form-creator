@@ -1,5 +1,6 @@
 import { Controller, useForm } from 'react-hook-form'
 import styled from 'styled-components'
+import { media } from '@/app/media'
 import type { ProjectCategory, ProjectDetails, TeamMember } from '@/api'
 import { Button, CheckboxGroup, Input, Select } from '@/design-system'
 import { CATEGORY_OPTIONS, TEAM_MEMBER_OPTIONS } from '@/features/resources/lib/constants'
@@ -130,4 +131,10 @@ const Form = styled.form`
 const Actions = styled.div`
   display: flex;
   justify-content: flex-end;
+
+  ${media.mobile} {
+    & > button {
+      width: 100%;
+    }
+  }
 `

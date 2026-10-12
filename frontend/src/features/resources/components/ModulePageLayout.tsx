@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { Card } from '@/design-system'
 import { paths } from '@/routes/paths'
 
 interface ModulePageLayoutProps {
@@ -25,7 +26,7 @@ export const ModulePageLayout = ({
     <Title>{title}</Title>
     {notice && <Notice>{notice}</Notice>}
     {submitError && <SubmitError role="alert">{submitError}</SubmitError>}
-    {children}
+    <Card variant="elevated">{children}</Card>
   </>
 )
 

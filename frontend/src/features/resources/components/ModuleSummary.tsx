@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { media } from '@/app/media'
 import { Badge, Card } from '@/design-system'
 
 export interface SummaryField {
@@ -55,6 +56,11 @@ const Row = styled.div`
   display: grid;
   grid-template-columns: 160px 1fr;
   gap: ${({ theme }) => theme.spacing.md};
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
 `
 
 const Label = styled.dt`

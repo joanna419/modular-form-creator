@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import type { Resource, ResourceListParams } from '@/api'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { CreateResourceForm } from '@/features/resources/components/CreateResourceForm'
+import { LoadingState } from '@/features/resources/components/LoadingState'
 import { PageState } from '@/features/resources/components/PageState'
 import { Pagination } from '@/features/resources/components/Pagination'
 import { ResourceCard } from '@/features/resources/components/ResourceCard'
@@ -50,12 +51,21 @@ export const ResourcesListPage = () => {
   }
 
   const items = data?.items ?? []
+  const hasFilters = Boolean(debouncedName.trim() || status)
 
   return (
     <>
-      <Title>Resources</Title>
+      <Header>
+        <h1>Resources</h1>
+        <Subtitle>
+          Create, track and complete resources
+          {data ? ` · ${data.pagination.totalItems} total` : ''}
+        </Subtitle>
+      </Header>
 
-      <CreateResourceForm />
+      <Section>
+        <CreateResourceForm />
+      </Section>
 
       <ResourceFilters
         name={nameInput}
@@ -71,13 +81,17 @@ export const ResourcesListPage = () => {
       />
 
       {isPending ? (
-        <PageState>Loading resources…</PageState>
+        <LoadingState label="Loading resources" />
       ) : isError ? (
         <PageState isError>
           {getErrorMessage(error, 'Failed to load resources.')}
         </PageState>
       ) : items.length === 0 ? (
-        <PageState>No resources found.</PageState>
+        <PageState>
+          {hasFilters
+            ? 'No resources match your filters.'
+            : 'No resources yet. Create the first one above.'}
+        </PageState>
       ) : (
         <List>
           {items.map((resource) => (
@@ -117,7 +131,16 @@ export const ResourcesListPage = () => {
   )
 }
 
-const Title = styled.h1`
+const Header = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`
+
+const Subtitle = styled.p`
+  margin-top: ${({ theme }) => theme.spacing.xs};
+  color: ${({ theme }) => theme.colors.inkMuted};
+`
+
+const Section = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 

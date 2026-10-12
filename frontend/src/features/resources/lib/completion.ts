@@ -28,3 +28,12 @@ export const canProvision = (resource: Resource): boolean =>
   resource.status === 'draft' &&
   isBasicInfoComplete(resource.basicInfo) &&
   isProjectDetailsComplete(resource.projectDetails)
+
+export const MODULE_COUNT = 2
+
+/** How many of the two modules are complete (for progress indicators). */
+export const countCompletedModules = (resource: Resource): number =>
+  [
+    isBasicInfoComplete(resource.basicInfo),
+    isProjectDetailsComplete(resource.projectDetails),
+  ].filter(Boolean).length

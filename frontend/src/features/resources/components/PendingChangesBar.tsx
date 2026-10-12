@@ -1,4 +1,6 @@
 import styled from 'styled-components'
+import { fadeInUp } from '@/app/animations'
+import { media } from '@/app/media'
 import { Button } from '@/design-system'
 
 interface PendingChangesBarProps {
@@ -40,6 +42,7 @@ const Bar = styled.div`
   background: ${({ theme }) => theme.colors.accentSoft};
   border: 1px solid ${({ theme }) => theme.colors.accent};
   border-radius: ${({ theme }) => theme.radii.md};
+  animation: ${fadeInUp} 0.25s ease both;
 `
 
 const Text = styled.p`
@@ -54,4 +57,10 @@ const Actions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: ${({ theme }) => theme.spacing.sm};
+
+  ${media.mobile} {
+    & > button {
+      flex: 1;
+    }
+  }
 `

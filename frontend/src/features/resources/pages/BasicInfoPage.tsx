@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import type { BasicInfo } from '@/api'
 import { BasicInfoForm } from '@/features/resources/components/BasicInfoForm'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
+import { LoadingState } from '@/features/resources/components/LoadingState'
 import { PageState } from '@/features/resources/components/PageState'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
 import { useResource } from '@/features/resources/hooks/useResource'
@@ -20,7 +21,7 @@ export const BasicInfoPage = () => {
   const update = useUpdateBasicInfo(resourceId)
   const buffer = useEditBuffer()
 
-  if (isPending) return <PageState>Loading resource…</PageState>
+  if (isPending) return <LoadingState label="Loading resource" rows={2} />
   if (isError) {
     return (
       <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import type { ResourceStatus } from '@/api'
+import { media } from '@/app/media'
 import { Input, Select } from '@/design-system'
 
 export type StatusFilter = ResourceStatus | ''
@@ -45,6 +46,10 @@ const Filters = styled.div`
   display: flex;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+
+  ${media.mobile} {
+    flex-direction: column;
+  }
 `
 
 const Search = styled.div`

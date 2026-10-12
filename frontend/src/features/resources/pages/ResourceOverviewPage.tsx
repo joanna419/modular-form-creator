@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { media } from '@/app/media'
 import { Button } from '@/design-system'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
+import { LoadingState } from '@/features/resources/components/LoadingState'
 import { ModuleCard } from '@/features/resources/components/ModuleCard'
+import { ModuleProgress } from '@/features/resources/components/ModuleProgress'
 import { PageState } from '@/features/resources/components/PageState'
 import { PendingChangesBar } from '@/features/resources/components/PendingChangesBar'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
@@ -15,6 +18,7 @@ import {
 } from '@/features/resources/hooks/useResourceMutations'
 import {
   canProvision,
+  countCompletedModules,
   isBasicInfoComplete,
   isProjectDetailsComplete,
 } from '@/features/resources/lib/completion'
@@ -33,7 +37,7 @@ export const ResourceOverviewPage = () => {
   const replace = useReplaceResource(resourceId)
   const buffer = useEditBuffer()
 
-  if (isPending) return <PageState>Loading resource…</PageState>
+  if (isPending) return <LoadingState label="Loading resource" rows={2} />
   if (isError) {
     return (
       <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
@@ -76,8 +80,11 @@ export const ResourceOverviewPage = () => {
       </TopBar>
 
       <Header>
-        <h1>{resource.name}</h1>
-        <StatusBadge status={resource.status} />
+        <TitleRow>
+          <h1>{resource.name}</h1>
+          <StatusBadge status={resource.status} />
+        </TitleRow>
+        <ModuleProgress completed={countCompletedModules(resource)} />
       </Header>
 
       {hasEdits && (
@@ -91,6 +98,7 @@ export const ResourceOverviewPage = () => {
 
       <Modules>
         <ModuleCard
+          step={1}
           title="Basic Info"
           isComplete={basicComplete}
           isEdited={Boolean(edits.basicInfo)}
@@ -98,6 +106,7 @@ export const ResourceOverviewPage = () => {
           onEdit={() => navigate(paths.basicInfo(resourceId))}
         />
         <ModuleCard
+          step={2}
           title="Project Details"
           isComplete={isProjectDetailsComplete(resource.projectDetails)}
           isEdited={Boolean(edits.projectDetails)}
@@ -145,6 +154,8 @@ export const ResourceOverviewPage = () => {
 const TopBar = styled.div`
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `
 
@@ -159,9 +170,16 @@ const DetailsLink = styled(Link)`
 
 const Header = styled.div`
   display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
+`
+
+const TitleRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const Modules = styled.div`
@@ -175,6 +193,12 @@ const Provisioning = styled.div`
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
+
+  ${media.mobile} {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
 `
 
 const Hint = styled.span`

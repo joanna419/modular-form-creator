@@ -6,13 +6,20 @@ interface PageStateProps {
   isError?: boolean
 }
 
-/** Centered muted message for loading / error / empty states. */
+/** Soft panel for error / empty states. */
 export const PageState = ({ children, isError = false }: PageStateProps) => (
-  <Message role={isError ? 'alert' : undefined}>{children}</Message>
+  <Panel role={isError ? 'alert' : undefined} $isError={isError}>
+    {children}
+  </Panel>
 )
 
-const Message = styled.p`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  padding: ${({ theme }) => theme.spacing.xl} 0;
+const Panel = styled.div<{ $isError: boolean }>`
+  padding: ${({ theme }) => theme.spacing.xl};
+  border: 1px dashed
+    ${({ theme, $isError }) => ($isError ? theme.colors.warning : theme.colors.border)};
+  border-radius: ${({ theme }) => theme.radii.lg};
+  background: rgba(255, 255, 255, 0.6);
+  color: ${({ theme, $isError }) =>
+    $isError ? theme.colors.warning : theme.colors.inkMuted};
   text-align: center;
 `

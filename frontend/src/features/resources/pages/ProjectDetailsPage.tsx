@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import type { ProjectDetails } from '@/api'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
+import { LoadingState } from '@/features/resources/components/LoadingState'
 import { PageState } from '@/features/resources/components/PageState'
 import { ProjectDetailsForm } from '@/features/resources/components/ProjectDetailsForm'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
@@ -21,7 +22,7 @@ export const ProjectDetailsPage = () => {
   const update = useUpdateProjectDetails(resourceId)
   const buffer = useEditBuffer()
 
-  if (isPending) return <PageState>Loading resource…</PageState>
+  if (isPending) return <LoadingState label="Loading resource" rows={2} />
   if (isError) {
     return (
       <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>

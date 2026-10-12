@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ModuleSummary } from '@/features/resources/components/ModuleSummary'
+import { LoadingState } from '@/features/resources/components/LoadingState'
 import { PageState } from '@/features/resources/components/PageState'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
@@ -23,7 +24,7 @@ export const ResourceDetailsPage = () => {
   const { data: resource, isPending, isError, error } = useResource(resourceId)
   const buffer = useEditBuffer()
 
-  if (isPending) return <PageState>Loading resource…</PageState>
+  if (isPending) return <LoadingState label="Loading resource" rows={2} />
   if (isError) {
     return (
       <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
@@ -93,6 +94,7 @@ const BackLink = styled(Link)`
 const Header = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: ${({ theme }) => theme.spacing.md};
   margin-bottom: ${({ theme }) => theme.spacing.xl};
 `

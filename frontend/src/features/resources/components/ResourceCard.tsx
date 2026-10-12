@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import type { Resource } from '@/api'
+import type { Resource, ResourceStatus } from '@/api'
+import { media } from '@/app/media'
 import { Card, IconButton } from '@/design-system'
+import { ModuleProgress } from '@/features/resources/components/ModuleProgress'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
+import { countCompletedModules } from '@/features/resources/lib/completion'
 import { paths } from '@/routes/paths'
 
 interface ResourceCardProps {
@@ -20,12 +23,15 @@ const TrashIcon = () => (
 )
 
 export const ResourceCard = ({ resource, onDelete }: ResourceCardProps) => (
-  <Card variant="outline">
+  <HoverCard variant="outline" $status={resource.status}>
     <Row>
-      <TextLink to={paths.resource(resource.resourceId)}>
-        <Name>{resource.name}</Name>
-        <Id>#{resource.resourceId}</Id>
-      </TextLink>
+      <Info>
+        <TextLink to={paths.resource(resource.resourceId)}>
+          <Name>{resource.name}</Name>
+          <Id>#{resource.resourceId}</Id>
+        </TextLink>
+        <ModuleProgress completed={countCompletedModules(resource)} />
+      </Info>
       <Actions>
         <StatusBadge status={resource.status} />
         <IconButton
@@ -37,14 +43,52 @@ export const ResourceCard = ({ resource, onDelete }: ResourceCardProps) => (
         </IconButton>
       </Actions>
     </Row>
-  </Card>
+  </HoverCard>
 )
+
+// Extends the design-system Card through its public className passthrough.
+const HoverCard = styled(Card)<{ $status: ResourceStatus }>`
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+
+  /* Status accent stripe. */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: ${({ theme, $status }) =>
+      $status === 'completed' ? theme.colors.success : theme.colors.primary};
+  }
+
+  &:hover,
+  &:focus-within {
+    transform: translateY(-2px);
+    box-shadow: ${({ theme }) => theme.shadows.raised};
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+`
 
 const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: ${({ theme }) => theme.spacing.md};
+
+  ${media.mobile} {
+    flex-wrap: wrap;
+  }
+`
+
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
+  min-width: 0;
 `
 
 const TextLink = styled(Link)`
@@ -52,10 +96,18 @@ const TextLink = styled(Link)`
   align-items: baseline;
   gap: ${({ theme }) => theme.spacing.sm};
   min-width: 0;
+
+  /* Stretched link: the whole card is clickable, the delete button sits above it. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
 `
 
 const Name = styled.span`
   font-weight: 600;
+  font-size: 1.05rem;
   color: ${({ theme }) => theme.colors.inkStrong};
   overflow: hidden;
   text-overflow: ellipsis;
@@ -68,6 +120,8 @@ const Id = styled.span`
 `
 
 const Actions = styled.div`
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.md};
