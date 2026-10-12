@@ -34,6 +34,9 @@ export const EditBufferProvider = ({ children }: { children: ReactNode }) => {
     [buffer],
   )
 
+  // The buffer only keeps entries with real differences, so presence == pending edits.
+  const hasEdits = useCallback((resourceId: string) => resourceId in buffer, [buffer])
+
   const applyModuleEdit = useCallback<EditBufferContextValue['applyModuleEdit']>(
     (resourceId, module, value, persisted) =>
       setBuffer((prev) => {
@@ -66,8 +69,8 @@ export const EditBufferProvider = ({ children }: { children: ReactNode }) => {
   )
 
   const value = useMemo(
-    () => ({ getEdits, applyModuleEdit, clearEdits }),
-    [getEdits, applyModuleEdit, clearEdits],
+    () => ({ getEdits, hasEdits, applyModuleEdit, clearEdits }),
+    [getEdits, hasEdits, applyModuleEdit, clearEdits],
   )
 
   return <EditBufferContext.Provider value={value}>{children}</EditBufferContext.Provider>

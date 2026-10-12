@@ -22,3 +22,9 @@ export const TEAM_MEMBER_OPTIONS: TeamMember[] = [
 
 export const COMPLETED_EDIT_NOTICE =
   'This resource is completed. Changes are kept locally and sent only when you submit them on the overview.'
+
+/** Human-readable label of an enum value (falls back to the raw value). */
+export const getOptionLabel = (
+  options: { value: string; label: string }[],
+  value: string,
+): string => options.find((option) => option.value === value)?.label ?? value

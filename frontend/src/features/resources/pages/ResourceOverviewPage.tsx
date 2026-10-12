@@ -46,7 +46,7 @@ export const ResourceOverviewPage = () => {
   const provisionable = canProvision(resource)
 
   const edits = buffer.getEdits(resourceId)
-  const hasEdits = Boolean(edits.basicInfo || edits.projectDetails)
+  const hasEdits = buffer.hasEdits(resourceId)
 
   const confirmProvision = () => {
     provision.mutate(resourceId, {

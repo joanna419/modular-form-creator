@@ -11,6 +11,8 @@ export type ModuleKey = keyof ResourceEdits
 
 export interface EditBufferContextValue {
   getEdits: (resourceId: string) => ResourceEdits
+  /** True when the resource has buffered changes not yet submitted. */
+  hasEdits: (resourceId: string) => boolean
   /** Buffers `value`, or drops the module edit when it equals `persisted`. */
   applyModuleEdit: <K extends ModuleKey>(
     resourceId: string,
