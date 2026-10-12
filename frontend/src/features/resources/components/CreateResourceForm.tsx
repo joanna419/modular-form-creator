@@ -1,8 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import styled from 'styled-components'
-import { ApiError } from '@/api'
 import { Button, Input } from '@/design-system'
 import { useCreateResource } from '@/features/resources/hooks/useResourceMutations'
+import { getErrorMessage } from '@/features/resources/lib/errors'
 import { validateResourceName } from '@/features/resources/lib/validation'
 
 export const CreateResourceForm = () => {
@@ -24,11 +24,8 @@ export const CreateResourceForm = () => {
         setName('')
         setError(null)
       },
-      onError: (err) => {
-        setError(
-          err instanceof ApiError ? err.message : 'Failed to create resource',
-        )
-      },
+      onError: (err) =>
+        setError(getErrorMessage(err, 'Failed to create resource')),
     })
   }
 

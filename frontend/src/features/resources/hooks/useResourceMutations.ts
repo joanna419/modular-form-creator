@@ -4,7 +4,9 @@ import {
   deleteResource,
   provisionResource,
   updateBasicInfo,
+  updateProjectDetails,
   type BasicInfo,
+  type ProjectDetails,
 } from '@/api'
 import { resourceKeys } from '@/features/resources/hooks/keys'
 
@@ -42,6 +44,14 @@ export const useUpdateBasicInfo = (id: string) => {
   const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (data: BasicInfo) => updateBasicInfo(id, data),
+    onSuccess: invalidate,
+  })
+}
+
+export const useUpdateProjectDetails = (id: string) => {
+  const invalidate = useInvalidateResources()
+  return useMutation({
+    mutationFn: (data: ProjectDetails) => updateProjectDetails(id, data),
     onSuccess: invalidate,
   })
 }

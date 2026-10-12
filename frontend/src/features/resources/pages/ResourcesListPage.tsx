@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import styled from 'styled-components'
-import { ApiError, type Resource, type ResourceListParams } from '@/api'
+import type { Resource, ResourceListParams } from '@/api'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { CreateResourceForm } from '@/features/resources/components/CreateResourceForm'
 import { PageState } from '@/features/resources/components/PageState'
@@ -13,6 +13,7 @@ import {
 import { useDebouncedValue } from '@/features/resources/hooks/useDebouncedValue'
 import { useDeleteResource } from '@/features/resources/hooks/useResourceMutations'
 import { useResources } from '@/features/resources/hooks/useResources'
+import { getErrorMessage } from '@/features/resources/lib/errors'
 
 const PAGE_SIZE = 10
 
@@ -69,9 +70,7 @@ export const ResourcesListPage = () => {
         <PageState>Loading resources…</PageState>
       ) : isError ? (
         <PageState isError>
-          {error instanceof ApiError
-            ? error.message
-            : 'Failed to load resources.'}
+          {getErrorMessage(error, 'Failed to load resources.')}
         </PageState>
       ) : items.length === 0 ? (
         <PageState>No resources found.</PageState>

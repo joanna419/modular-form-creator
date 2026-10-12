@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { ApiError } from '@/api'
 import { Button } from '@/design-system'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { ModuleCard } from '@/features/resources/components/ModuleCard'
@@ -14,6 +13,7 @@ import {
   isBasicInfoComplete,
   isProjectDetailsComplete,
 } from '@/features/resources/lib/completion'
+import { getErrorMessage } from '@/features/resources/lib/errors'
 import { paths } from '@/routes/paths'
 
 export const ResourceOverviewPage = () => {
@@ -28,7 +28,7 @@ export const ResourceOverviewPage = () => {
   if (isError) {
     return (
       <PageState isError>
-        {error instanceof ApiError ? error.message : 'Failed to load resource.'}
+        {getErrorMessage(error, 'Failed to load resource.')}
       </PageState>
     )
   }
