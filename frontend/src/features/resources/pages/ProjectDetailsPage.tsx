@@ -41,10 +41,10 @@ export const ProjectDetailsPage = () => {
   const projectDetails =
     (isCompleted && buffer.getEdits(resourceId).projectDetails) || resource.projectDetails
 
-  const handleSubmit = (data: ProjectDetails, isDirty: boolean) => {
+  const handleSubmit = (data: ProjectDetails) => {
     if (isCompleted) {
-      // Buffer only — persisted later via PUT from the overview.
-      if (isDirty) buffer.saveModuleEdit(resourceId, { projectDetails: data })
+      // Buffer only (persisted later via PUT from the overview).
+      buffer.applyModuleEdit(resourceId, 'projectDetails', data, resource.projectDetails)
       backToOverview()
       return
     }

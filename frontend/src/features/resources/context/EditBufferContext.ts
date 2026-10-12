@@ -7,9 +7,17 @@ export interface ResourceEdits {
   projectDetails?: ProjectDetails
 }
 
+export type ModuleKey = keyof ResourceEdits
+
 export interface EditBufferContextValue {
   getEdits: (resourceId: string) => ResourceEdits
-  saveModuleEdit: (resourceId: string, edit: ResourceEdits) => void
+  /** Buffers `value`, or drops the module edit when it equals `persisted`. */
+  applyModuleEdit: <K extends ModuleKey>(
+    resourceId: string,
+    module: K,
+    value: NonNullable<ResourceEdits[K]>,
+    persisted: NonNullable<ResourceEdits[K]>,
+  ) => void
   clearEdits: (resourceId: string) => void
 }
 

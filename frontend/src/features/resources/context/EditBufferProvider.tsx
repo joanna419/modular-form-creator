@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   EditBufferContext,
+  type EditBufferContextValue,
   type ResourceEdits,
 } from '@/features/resources/context/EditBufferContext'
+import { isSameModule } from '@/features/resources/lib/moduleEquality'
 
 const NO_EDITS: ResourceEdits = {}
 
 /**
  * Holds completed-resource edits until the user submits them (PUT).
+ * Only real differences from the persisted data are kept.
  * Plain React state on purpose: the buffer is lost on refresh / tab close.
  */
 export const EditBufferProvider = ({ children }: { children: ReactNode }) => {
@@ -31,12 +34,24 @@ export const EditBufferProvider = ({ children }: { children: ReactNode }) => {
     [buffer],
   )
 
-  const saveModuleEdit = useCallback(
-    (resourceId: string, edit: ResourceEdits) =>
-      setBuffer((prev) => ({
-        ...prev,
-        [resourceId]: { ...prev[resourceId], ...edit },
-      })),
+  const applyModuleEdit = useCallback<EditBufferContextValue['applyModuleEdit']>(
+    (resourceId, module, value, persisted) =>
+      setBuffer((prev) => {
+        const edits: ResourceEdits = { ...prev[resourceId] }
+        if (isSameModule(value, persisted)) {
+          delete edits[module]
+        } else {
+          edits[module] = value
+        }
+
+        const next = { ...prev }
+        if (Object.keys(edits).length > 0) {
+          next[resourceId] = edits
+        } else {
+          delete next[resourceId]
+        }
+        return next
+      }),
     [],
   )
 
@@ -51,8 +66,8 @@ export const EditBufferProvider = ({ children }: { children: ReactNode }) => {
   )
 
   const value = useMemo(
-    () => ({ getEdits, saveModuleEdit, clearEdits }),
-    [getEdits, saveModuleEdit, clearEdits],
+    () => ({ getEdits, applyModuleEdit, clearEdits }),
+    [getEdits, applyModuleEdit, clearEdits],
   )
 
   return <EditBufferContext.Provider value={value}>{children}</EditBufferContext.Provider>

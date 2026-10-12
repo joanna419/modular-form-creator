@@ -35,10 +35,10 @@ export const BasicInfoPage = () => {
     (isCompleted && buffer.getEdits(resourceId).basicInfo) || resource.basicInfo
   const { resourceName, ...editableFields } = basicInfo
 
-  const handleSubmit = (data: BasicInfo, isDirty: boolean) => {
+  const handleSubmit = (data: BasicInfo) => {
     if (isCompleted) {
-      // Buffer only — persisted later via PUT from the overview.
-      if (isDirty) buffer.saveModuleEdit(resourceId, { basicInfo: data })
+      // Buffer only (persisted later via PUT from the overview).
+      buffer.applyModuleEdit(resourceId, 'basicInfo', data, resource.basicInfo)
       backToOverview()
       return
     }

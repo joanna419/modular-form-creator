@@ -16,8 +16,7 @@ interface ProjectDetailsFormProps {
   defaultValues: ProjectDetailsFormValues
   submitLabel: string
   isSubmitting: boolean
-  /** `isDirty` tells whether any field differs from `defaultValues`. */
-  onSubmit: (values: ProjectDetails, isDirty: boolean) => void
+  onSubmit: (values: ProjectDetails) => void
 }
 
 const CATEGORY_SELECT_OPTIONS = [
@@ -31,24 +30,17 @@ export const ProjectDetailsForm = ({
   isSubmitting,
   onSubmit,
 }: ProjectDetailsFormProps) => {
-  const {
-    control,
-    handleSubmit,
-    formState: { isDirty },
-  } = useForm<ProjectDetailsFormValues>({
+  const { control, handleSubmit } = useForm<ProjectDetailsFormValues>({
     defaultValues,
   })
 
   const submit = handleSubmit((values) => {
-    onSubmit(
-      {
-        projectName: values.projectName.trim(),
-        budget: values.budget.trim(),
-        category: values.category as ProjectCategory,
-        options: values.options,
-      },
-      isDirty,
-    )
+    onSubmit({
+      projectName: values.projectName.trim(),
+      budget: values.budget.trim(),
+      category: values.category as ProjectCategory,
+      options: values.options,
+    })
   })
 
   return (
