@@ -1,16 +1,17 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { BasicInfoPage } from '../features/resources/pages/BasicInfoPage'
-import { ProjectDetailsPage } from '../features/resources/pages/ProjectDetailsPage'
-import { ResourceDetailsPage } from '../features/resources/pages/ResourceDetailsPage'
-import { ResourceOverviewPage } from '../features/resources/pages/ResourceOverviewPage'
-import { ResourcesListPage } from '../features/resources/pages/ResourcesListPage'
-import { RootLayout } from './RootLayout'
+import { BasicInfoPage } from '@/features/resources/pages/BasicInfoPage'
+import { ProjectDetailsPage } from '@/features/resources/pages/ProjectDetailsPage'
+import { ResourceDetailsPage } from '@/features/resources/pages/ResourceDetailsPage'
+import { ResourceOverviewPage } from '@/features/resources/pages/ResourceOverviewPage'
+import { ResourcesListPage } from '@/features/resources/pages/ResourcesListPage'
+import { paths } from '@/routes/paths'
+import { RootLayout } from '@/routes/RootLayout'
 
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
-      { index: true, element: <Navigate to="/resources" replace /> },
+      { index: true, element: <Navigate to={paths.resources} replace /> },
       { path: 'resources', element: <ResourcesListPage /> },
       { path: 'resources/:resourceId', element: <ResourceOverviewPage /> },
       {

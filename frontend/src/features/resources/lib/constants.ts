@@ -1,4 +1,4 @@
-import type { Priority, ProjectCategory, TeamMember } from '../../../api'
+import type { Priority, ProjectCategory, TeamMember } from '@/api'
 
 export const PRIORITY_OPTIONS: { value: Priority; label: string }[] = [
   { value: 'low', label: 'Low' },

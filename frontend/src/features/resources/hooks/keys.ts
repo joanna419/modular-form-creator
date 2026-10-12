@@ -1,4 +1,4 @@
-import type { ResourceListParams } from '../../../api'
+import type { ResourceListParams } from '@/api'
 
 export const resourceKeys = {
   all: ['resources'] as const,

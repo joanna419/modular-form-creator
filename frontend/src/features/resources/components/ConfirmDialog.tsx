@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
-import styled from 'styled-components'
-import { Button, Drawer } from '../../../design-system'
+import { Button, Drawer } from '@/design-system'
 
 interface ConfirmDialogProps {
   isOpen: boolean
@@ -13,7 +12,7 @@ interface ConfirmDialogProps {
   onClose: () => void
 }
 
-export function ConfirmDialog({
+export const ConfirmDialog = ({
   isOpen,
   title,
   message,
@@ -22,29 +21,16 @@ export function ConfirmDialog({
   isBusy = false,
   onConfirm,
   onClose,
-}: ConfirmDialogProps) {
-  return (
-    <Drawer title={title} isOpen={isOpen} onClose={onClose}>
-      <Message>{message}</Message>
-      <Actions>
-        <Button variant="ghost" onClick={onClose} disabled={isBusy}>
-          Cancel
-        </Button>
-        <Button onClick={onConfirm} disabled={isBusy}>
-          {isBusy && busyLabel ? busyLabel : confirmLabel}
-        </Button>
-      </Actions>
-    </Drawer>
-  )
-}
-
-const Message = styled.div`
-  color: ${({ theme }) => theme.colors.ink};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
-
-const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: ${({ theme }) => theme.spacing.sm};
-`
+}: ConfirmDialogProps) => (
+  <Drawer title={title} isOpen={isOpen} onClose={onClose}>
+    <div className="mb-6 text-ink">{message}</div>
+    <div className="flex justify-end gap-2">
+      <Button variant="ghost" onClick={onClose} disabled={isBusy}>
+        Cancel
+      </Button>
+      <Button onClick={onConfirm} disabled={isBusy}>
+        {isBusy && busyLabel ? busyLabel : confirmLabel}
+      </Button>
+    </div>
+  </Drawer>
+)

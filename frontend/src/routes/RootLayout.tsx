@@ -1,41 +1,18 @@
 import { Link, Outlet } from 'react-router-dom'
-import styled from 'styled-components'
-import { paths } from './paths'
+import { paths } from '@/routes/paths'
 
-export function RootLayout() {
-  return (
-    <Page>
-      <Header>
-        <Brand to={paths.resources}>Resources Management</Brand>
-      </Header>
-      <Main>
-        <Outlet />
-      </Main>
-    </Page>
-  )
-}
-
-const Page = styled.div`
-  min-height: 100vh;
-  background: ${({ theme }) => theme.colors.surfaceAlt};
-`
-
-const Header = styled.header`
-  background: ${({ theme }) => theme.colors.surface};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xl};
-`
-
-const Brand = styled(Link)`
-  font-family: ${({ theme }) => theme.typography.heading};
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.inkStrong};
-  text-decoration: none;
-`
-
-const Main = styled.main`
-  max-width: 960px;
-  margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.xl};
-`
+export const RootLayout = () => (
+  <div className="min-h-screen bg-surface-alt">
+    <header className="border-b border-border bg-surface px-8 py-4">
+      <Link
+        to={paths.resources}
+        className="font-heading text-xl font-semibold text-ink-strong"
+      >
+        Resources Management
+      </Link>
+    </header>
+    <main className="mx-auto max-w-[960px] p-8">
+      <Outlet />
+    </main>
+  </div>
+)

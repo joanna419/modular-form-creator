@@ -5,41 +5,43 @@ import {
   provisionResource,
   updateBasicInfo,
   type BasicInfo,
-} from '../../../api'
-import { resourceKeys } from './keys'
+} from '@/api'
+import { resourceKeys } from '@/features/resources/hooks/keys'
 
-export function useCreateResource() {
+/** Every mutation refreshes all resource queries (list + detail) on success. */
+const useInvalidateResources = () => {
   const queryClient = useQueryClient()
+  return () => queryClient.invalidateQueries({ queryKey: resourceKeys.all })
+}
+
+export const useCreateResource = () => {
+  const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (resourceName: string) => createResource(resourceName),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: resourceKeys.all }),
+    onSuccess: invalidate,
   })
 }
 
-export function useDeleteResource() {
-  const queryClient = useQueryClient()
+export const useDeleteResource = () => {
+  const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (id: string) => deleteResource(id),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: resourceKeys.all }),
+    onSuccess: invalidate,
   })
 }
 
-export function useProvisionResource() {
-  const queryClient = useQueryClient()
+export const useProvisionResource = () => {
+  const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (id: string) => provisionResource(id),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: resourceKeys.all }),
+    onSuccess: invalidate,
   })
 }
 
-export function useUpdateBasicInfo(id: string) {
-  const queryClient = useQueryClient()
+export const useUpdateBasicInfo = (id: string) => {
+  const invalidate = useInvalidateResources()
   return useMutation({
     mutationFn: (data: BasicInfo) => updateBasicInfo(id, data),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: resourceKeys.all }),
+    onSuccess: invalidate,
   })
 }

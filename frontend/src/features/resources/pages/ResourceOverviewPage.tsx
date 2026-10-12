@@ -1,22 +1,21 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { ApiError } from '../../../api'
-import { Button } from '../../../design-system'
-import { paths } from '../../../routes/paths'
-import { ConfirmDialog } from '../components/ConfirmDialog'
-import { ModuleCard } from '../components/ModuleCard'
-import { PageState } from '../components/PageState'
-import { StatusBadge } from '../components/StatusBadge'
-import { useResource } from '../hooks/useResource'
-import { useProvisionResource } from '../hooks/useResourceMutations'
+import { ApiError } from '@/api'
+import { Button } from '@/design-system'
+import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
+import { ModuleCard } from '@/features/resources/components/ModuleCard'
+import { PageState } from '@/features/resources/components/PageState'
+import { StatusBadge } from '@/features/resources/components/StatusBadge'
+import { useResource } from '@/features/resources/hooks/useResource'
+import { useProvisionResource } from '@/features/resources/hooks/useResourceMutations'
 import {
   canProvision,
   isBasicInfoComplete,
   isProjectDetailsComplete,
-} from '../lib/completion'
+} from '@/features/resources/lib/completion'
+import { paths } from '@/routes/paths'
 
-export function ResourceOverviewPage() {
+export const ResourceOverviewPage = () => {
   const { resourceId = '' } = useParams()
   const navigate = useNavigate()
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -27,7 +26,7 @@ export function ResourceOverviewPage() {
   if (isPending) return <PageState>Loading resource…</PageState>
   if (isError) {
     return (
-      <PageState role="alert">
+      <PageState isError>
         {error instanceof ApiError ? error.message : 'Failed to load resource.'}
       </PageState>
     )
@@ -46,19 +45,24 @@ export function ResourceOverviewPage() {
 
   return (
     <>
-      <TopBar>
-        <BackLink to={paths.resources}>← Back to resources</BackLink>
-        <DetailsLink to={paths.resourceDetails(resourceId)}>
+      <div className="mb-6 flex justify-between">
+        <Link to={paths.resources} className="text-ink-muted">
+          ← Back to resources
+        </Link>
+        <Link
+          to={paths.resourceDetails(resourceId)}
+          className="font-semibold text-primary"
+        >
           View details
-        </DetailsLink>
-      </TopBar>
+        </Link>
+      </div>
 
-      <Header>
-        <Name>{resource.name}</Name>
+      <div className="mb-8 flex items-center gap-4">
+        <h1>{resource.name}</h1>
         <StatusBadge status={resource.status} />
-      </Header>
+      </div>
 
-      <Modules>
+      <div className="mb-8 flex flex-col gap-4">
         <ModuleCard
           title="Basic Info"
           isComplete={basicComplete}
@@ -73,25 +77,29 @@ export function ResourceOverviewPage() {
           locked={projectLocked}
           lockedReason="Complete Basic Info first"
         />
-      </Modules>
+      </div>
 
-      {isDraft ? (
-        <Provisioning>
-          <Button
-            onClick={() => setConfirmOpen(true)}
-            disabled={!provisionable}
-          >
-            Complete resource
-          </Button>
-          {!provisionable && (
-            <Hint>Both modules must be complete before provisioning.</Hint>
-          )}
-        </Provisioning>
-      ) : (
-        <Provisioning>
-          <Hint>This resource is completed.</Hint>
-        </Provisioning>
-      )}
+      <div className="flex items-center gap-4">
+        {isDraft ? (
+          <>
+            <Button
+              onClick={() => setConfirmOpen(true)}
+              disabled={!provisionable}
+            >
+              Complete resource
+            </Button>
+            {!provisionable && (
+              <span className="text-sm text-ink-muted">
+                Both modules must be complete before provisioning.
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="text-sm text-ink-muted">
+            This resource is completed.
+          </span>
+        )}
+      </div>
 
       <ConfirmDialog
         isOpen={confirmOpen}
@@ -111,49 +119,3 @@ export function ResourceOverviewPage() {
     </>
   )
 }
-
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
-
-const BackLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  text-decoration: none;
-`
-
-const DetailsLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.primary};
-  text-decoration: none;
-  font-weight: 600;
-`
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`
-
-const Name = styled.h1`
-  margin: 0;
-`
-
-const Modules = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-`
-
-const Provisioning = styled.div`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-`
-
-const Hint = styled.span`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  font-size: 0.875rem;
-`

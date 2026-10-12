@@ -1,36 +1,30 @@
-import type { BasicInfo, ProjectDetails, Resource } from '../../../api'
+import type { BasicInfo, ProjectDetails, Resource } from '@/api'
 
 /** Mirrors backend isBasicInfoComplete: every field must be non-empty. */
-export function isBasicInfoComplete(basicInfo: BasicInfo): boolean {
-  return Boolean(
+export const isBasicInfoComplete = (basicInfo: BasicInfo): boolean =>
+  Boolean(
     basicInfo.resourceName &&
       basicInfo.owner &&
       basicInfo.email &&
       basicInfo.description &&
       basicInfo.priority,
   )
-}
 
 /** Mirrors backend isProjectDetailsComplete: fields non-empty + at least one option. */
-export function isProjectDetailsComplete(details: ProjectDetails): boolean {
-  return Boolean(
+export const isProjectDetailsComplete = (details: ProjectDetails): boolean =>
+  Boolean(
     details.projectName &&
       details.budget &&
       details.category &&
       details.options.length > 0,
   )
-}
 
 /** Project Details is editable (draft) only after Basic Info is complete. */
-export function canEditProjectDetails(resource: Resource): boolean {
-  return isBasicInfoComplete(resource.basicInfo)
-}
+export const canEditProjectDetails = (resource: Resource): boolean =>
+  isBasicInfoComplete(resource.basicInfo)
 
-/** Provisioning is allowed only when both modules are complete. */
-export function canProvision(resource: Resource): boolean {
-  return (
-    resource.status === 'draft' &&
-    isBasicInfoComplete(resource.basicInfo) &&
-    isProjectDetailsComplete(resource.projectDetails)
-  )
-}
+/** Provisioning is allowed only for a draft with both modules complete. */
+export const canProvision = (resource: Resource): boolean =>
+  resource.status === 'draft' &&
+  isBasicInfoComplete(resource.basicInfo) &&
+  isProjectDetailsComplete(resource.projectDetails)

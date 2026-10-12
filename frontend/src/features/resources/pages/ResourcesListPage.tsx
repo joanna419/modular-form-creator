@@ -1,22 +1,21 @@
 import { useState } from 'react'
-import styled from 'styled-components'
-import { ApiError, type Resource, type ResourceListParams } from '../../../api'
-import { ConfirmDialog } from '../components/ConfirmDialog'
-import { CreateResourceForm } from '../components/CreateResourceForm'
-import { PageState } from '../components/PageState'
-import { Pagination } from '../components/Pagination'
+import { ApiError, type Resource, type ResourceListParams } from '@/api'
+import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
+import { CreateResourceForm } from '@/features/resources/components/CreateResourceForm'
+import { PageState } from '@/features/resources/components/PageState'
+import { Pagination } from '@/features/resources/components/Pagination'
+import { ResourceCard } from '@/features/resources/components/ResourceCard'
 import {
   ResourceFilters,
   type StatusFilter,
-} from '../components/ResourceFilters'
-import { ResourceCard } from '../components/ResourceCard'
-import { useDebouncedValue } from '../hooks/useDebouncedValue'
-import { useResources } from '../hooks/useResources'
-import { useDeleteResource } from '../hooks/useResourceMutations'
+} from '@/features/resources/components/ResourceFilters'
+import { useDebouncedValue } from '@/features/resources/hooks/useDebouncedValue'
+import { useDeleteResource } from '@/features/resources/hooks/useResourceMutations'
+import { useResources } from '@/features/resources/hooks/useResources'
 
 const PAGE_SIZE = 10
 
-export function ResourcesListPage() {
+export const ResourcesListPage = () => {
   const [nameInput, setNameInput] = useState('')
   const [status, setStatus] = useState<StatusFilter>('')
   const [page, setPage] = useState(1)
@@ -48,7 +47,7 @@ export function ResourcesListPage() {
 
   return (
     <>
-      <Title>Resources</Title>
+      <h1 className="mb-6">Resources</h1>
 
       <CreateResourceForm />
 
@@ -68,7 +67,7 @@ export function ResourcesListPage() {
       {isPending ? (
         <PageState>Loading resources…</PageState>
       ) : isError ? (
-        <PageState role="alert">
+        <PageState isError>
           {error instanceof ApiError
             ? error.message
             : 'Failed to load resources.'}
@@ -76,7 +75,7 @@ export function ResourcesListPage() {
       ) : items.length === 0 ? (
         <PageState>No resources found.</PageState>
       ) : (
-        <List>
+        <div className="flex flex-col gap-4">
           {items.map((resource) => (
             <ResourceCard
               key={resource._id}
@@ -84,7 +83,7 @@ export function ResourcesListPage() {
               onDelete={setResourceToDelete}
             />
           ))}
-        </List>
+        </div>
       )}
 
       {data && (
@@ -114,13 +113,3 @@ export function ResourcesListPage() {
     </>
   )
 }
-
-const Title = styled.h1`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
-
-const List = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-`

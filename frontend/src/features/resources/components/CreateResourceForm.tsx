@@ -1,11 +1,10 @@
 import { useState, type FormEvent } from 'react'
-import styled from 'styled-components'
-import { ApiError } from '../../../api'
-import { Button, Input } from '../../../design-system'
-import { useCreateResource } from '../hooks/useResourceMutations'
-import { validateResourceName } from '../lib/validation'
+import { ApiError } from '@/api'
+import { Button, Input } from '@/design-system'
+import { useCreateResource } from '@/features/resources/hooks/useResourceMutations'
+import { validateResourceName } from '@/features/resources/lib/validation'
 
-export function CreateResourceForm() {
+export const CreateResourceForm = () => {
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
   const create = useCreateResource()
@@ -33,8 +32,8 @@ export function CreateResourceForm() {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Field>
+    <form onSubmit={handleSubmit} className="mb-6 flex items-start gap-2">
+      <div className="flex-1">
         <Input
           label="New resource"
           placeholder="Resource name"
@@ -45,21 +44,10 @@ export function CreateResourceForm() {
             if (error) setError(null)
           }}
         />
-      </Field>
+      </div>
       <Button type="submit" disabled={create.isPending}>
         {create.isPending ? 'Creating…' : 'Create'}
       </Button>
-    </Form>
+    </form>
   )
 }
-
-const Form = styled.form`
-  display: flex;
-  align-items: flex-start;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
-
-const Field = styled.div`
-  flex: 1;
-`

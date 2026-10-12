@@ -1,5 +1,4 @@
-import styled from 'styled-components'
-import { Button } from '../../../design-system'
+import { Button } from '@/design-system'
 
 interface PaginationProps {
   page: number
@@ -7,11 +6,15 @@ interface PaginationProps {
   onPageChange: (page: number) => void
 }
 
-export function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
+export const Pagination = ({
+  page,
+  totalPages,
+  onPageChange,
+}: PaginationProps) => {
   if (totalPages <= 1) return null
 
   return (
-    <Bar>
+    <div className="mt-6 flex items-center justify-center gap-4">
       <Button
         variant="secondary"
         disabled={page <= 1}
@@ -19,9 +22,9 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
       >
         Previous
       </Button>
-      <PageInfo>
+      <span className="text-sm text-ink-muted">
         Page {page} of {totalPages}
-      </PageInfo>
+      </span>
       <Button
         variant="secondary"
         disabled={page >= totalPages}
@@ -29,19 +32,6 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
       >
         Next
       </Button>
-    </Bar>
+    </div>
   )
 }
-
-const Bar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-top: ${({ theme }) => theme.spacing.lg};
-`
-
-const PageInfo = styled.span`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  font-size: 0.875rem;
-`

@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
-import { getResource } from '../../../api'
-import { resourceKeys } from './keys'
+import { getResource } from '@/api'
+import { resourceKeys } from '@/features/resources/hooks/keys'
 
-export function useResource(id: string) {
-  return useQuery({
+export const useResource = (id: string) =>
+  useQuery({
     queryKey: resourceKeys.detail(id),
     queryFn: () => getResource(id),
   })
-}

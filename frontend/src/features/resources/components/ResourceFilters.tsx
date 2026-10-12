@@ -1,6 +1,5 @@
-import styled from 'styled-components'
-import type { ResourceStatus } from '../../../api'
-import { Input, Select } from '../../../design-system'
+import type { ResourceStatus } from '@/api'
+import { Input, Select } from '@/design-system'
 
 export type StatusFilter = ResourceStatus | ''
 
@@ -17,36 +16,26 @@ interface ResourceFiltersProps {
   onStatusChange: (value: StatusFilter) => void
 }
 
-export function ResourceFilters({
+export const ResourceFilters = ({
   name,
   onNameChange,
   status,
   onStatusChange,
-}: ResourceFiltersProps) {
-  return (
-    <Filters>
+}: ResourceFiltersProps) => (
+  <div className="mb-6 flex gap-4">
+    <div className="flex-1">
       <Input
         label="Search"
         placeholder="Search by name"
         value={name}
         onChange={(event) => onNameChange(event.target.value)}
       />
-      <Select
-        label="Status"
-        options={STATUS_OPTIONS}
-        value={status}
-        onChange={(event) => onStatusChange(event.target.value as StatusFilter)}
-      />
-    </Filters>
-  )
-}
-
-const Filters = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-
-  & > *:first-child {
-    flex: 1;
-  }
-`
+    </div>
+    <Select
+      label="Status"
+      options={STATUS_OPTIONS}
+      value={status}
+      onChange={(event) => onStatusChange(event.target.value as StatusFilter)}
+    />
+  </div>
+)

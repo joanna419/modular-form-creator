@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import styled from 'styled-components'
-import { ApiError, type BasicInfo } from '../../../api'
-import { paths } from '../../../routes/paths'
-import { BasicInfoForm } from '../components/BasicInfoForm'
-import { PageState } from '../components/PageState'
-import { useResource } from '../hooks/useResource'
-import { useUpdateBasicInfo } from '../hooks/useResourceMutations'
+import { ApiError, type BasicInfo } from '@/api'
+import { BasicInfoForm } from '@/features/resources/components/BasicInfoForm'
+import { PageState } from '@/features/resources/components/PageState'
+import { useResource } from '@/features/resources/hooks/useResource'
+import { useUpdateBasicInfo } from '@/features/resources/hooks/useResourceMutations'
+import { paths } from '@/routes/paths'
 
-export function BasicInfoPage() {
+export const BasicInfoPage = () => {
   const { resourceId = '' } = useParams()
   const navigate = useNavigate()
   const [submitError, setSubmitError] = useState<string | null>(null)
@@ -19,7 +18,7 @@ export function BasicInfoPage() {
   if (isPending) return <PageState>Loading resource…</PageState>
   if (isError) {
     return (
-      <PageState role="alert">
+      <PageState isError>
         {error instanceof ApiError ? error.message : 'Failed to load resource.'}
       </PageState>
     )
@@ -27,9 +26,7 @@ export function BasicInfoPage() {
 
   // Completed-resource editing uses the buffered full-update flow (next step).
   if (resource.status === 'completed') {
-    return (
-      <PageState>Completed resources cannot be edited here yet.</PageState>
-    )
+    return <PageState>Completed resources cannot be edited here yet.</PageState>
   }
 
   const handleSubmit = (data: BasicInfo) => {
@@ -45,9 +42,18 @@ export function BasicInfoPage() {
 
   return (
     <>
-      <BackLink to={paths.resource(resourceId)}>← Back to overview</BackLink>
-      <Title>Basic Info</Title>
-      {submitError && <Error role="alert">{submitError}</Error>}
+      <Link
+        to={paths.resource(resourceId)}
+        className="mb-6 inline-block text-ink-muted"
+      >
+        ← Back to overview
+      </Link>
+      <h1 className="mb-6">Basic Info</h1>
+      {submitError && (
+        <p role="alert" className="mb-4 text-warning">
+          {submitError}
+        </p>
+      )}
       <BasicInfoForm
         resourceName={resource.basicInfo.resourceName || resource.name}
         defaultValues={{
@@ -63,19 +69,3 @@ export function BasicInfoPage() {
     </>
   )
 }
-
-const BackLink = styled(Link)`
-  display: inline-block;
-  color: ${({ theme }) => theme.colors.inkMuted};
-  text-decoration: none;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`
-
-const Title = styled.h1`
-  margin: 0 0 ${({ theme }) => theme.spacing.lg};
-`
-
-const Error = styled.p`
-  color: ${({ theme }) => theme.colors.warning};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`

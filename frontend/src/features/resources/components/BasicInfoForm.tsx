@@ -1,13 +1,12 @@
 import { Controller, useForm } from 'react-hook-form'
-import styled from 'styled-components'
-import type { BasicInfo, Priority } from '../../../api'
-import { Button, Input, Select } from '../../../design-system'
-import { PRIORITY_OPTIONS } from '../lib/constants'
+import type { BasicInfo, Priority } from '@/api'
+import { Button, Input, Select } from '@/design-system'
+import { PRIORITY_OPTIONS } from '@/features/resources/lib/constants'
 import {
   validateDescription,
   validateEmail,
   validateOwner,
-} from '../lib/validation'
+} from '@/features/resources/lib/validation'
 
 export interface BasicInfoFormValues {
   owner: string
@@ -30,13 +29,13 @@ const PRIORITY_SELECT_OPTIONS = [
   ...PRIORITY_OPTIONS,
 ]
 
-export function BasicInfoForm({
+export const BasicInfoForm = ({
   resourceName,
   defaultValues,
   submitLabel,
   isSubmitting,
   onSubmit,
-}: BasicInfoFormProps) {
+}: BasicInfoFormProps) => {
   const { control, handleSubmit } = useForm<BasicInfoFormValues>({
     defaultValues,
   })
@@ -52,7 +51,7 @@ export function BasicInfoForm({
   })
 
   return (
-    <Form onSubmit={submit}>
+    <form onSubmit={submit} className="flex flex-col gap-4">
       <Input label="Resource name" value={resourceName} disabled />
 
       <Controller
@@ -121,22 +120,11 @@ export function BasicInfoForm({
         )}
       />
 
-      <Actions>
+      <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting}>
           {isSubmitting ? 'Saving…' : submitLabel}
         </Button>
-      </Actions>
-    </Form>
+      </div>
+    </form>
   )
 }
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-`
-
-const Actions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`

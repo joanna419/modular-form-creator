@@ -1,3 +1,3 @@
-export { ApiError } from './client'
-export * from './resources'
-export type * from './types'
+export { ApiError } from '@/api/client'
+export * from '@/api/resources'
+export type * from '@/api/types'

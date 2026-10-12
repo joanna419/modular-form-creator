@@ -1,5 +1,4 @@
-import styled from 'styled-components'
-import { Badge, Button, Card } from '../../../design-system'
+import { Badge, Button, Card } from '@/design-system'
 
 interface ModuleCardProps {
   title: string
@@ -10,47 +9,28 @@ interface ModuleCardProps {
   lockedReason?: string
 }
 
-export function ModuleCard({
+export const ModuleCard = ({
   title,
   isComplete,
   actionLabel,
   onEdit,
   locked = false,
   lockedReason,
-}: ModuleCardProps) {
-  return (
-    <Card variant="outline">
-      <Header>
-        <Title>{title}</Title>
-        <Badge variant={isComplete ? 'success' : 'neutral'}>
-          {isComplete ? 'Complete' : 'Incomplete'}
-        </Badge>
-      </Header>
+}: ModuleCardProps) => (
+  <Card variant="outline">
+    <div className="mb-4 flex items-center justify-between gap-4">
+      <h2 className="text-lg">{title}</h2>
+      <Badge variant={isComplete ? 'success' : 'neutral'}>
+        {isComplete ? 'Complete' : 'Incomplete'}
+      </Badge>
+    </div>
 
-      {locked && lockedReason && <LockNote>{lockedReason}</LockNote>}
+    {locked && lockedReason && (
+      <p className="mb-4 text-sm text-ink-muted">{lockedReason}</p>
+    )}
 
-      <Button variant="secondary" onClick={onEdit} disabled={locked}>
-        {actionLabel}
-      </Button>
-    </Card>
-  )
-}
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`
-
-const Title = styled.h2`
-  font-size: 1.125rem;
-  margin: 0;
-`
-
-const LockNote = styled.p`
-  color: ${({ theme }) => theme.colors.inkMuted};
-  font-size: 0.875rem;
-  margin: 0 0 ${({ theme }) => theme.spacing.md};
-`
+    <Button variant="secondary" onClick={onEdit} disabled={locked}>
+      {actionLabel}
+    </Button>
+  </Card>
+)

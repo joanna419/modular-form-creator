@@ -1,11 +1,10 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import { listResources, type ResourceListParams } from '../../../api'
-import { resourceKeys } from './keys'
+import { listResources, type ResourceListParams } from '@/api'
+import { resourceKeys } from '@/features/resources/hooks/keys'
 
-export function useResources(params: ResourceListParams) {
-  return useQuery({
+export const useResources = (params: ResourceListParams) =>
+  useQuery({
     queryKey: resourceKeys.list(params),
     queryFn: () => listResources(params),
     placeholderData: keepPreviousData,
   })
-}

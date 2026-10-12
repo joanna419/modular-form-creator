@@ -1,4 +1,4 @@
-import { request } from './client'
+import { request } from '@/api/client'
 import type {
   BasicInfo,
   ProjectDetails,
@@ -6,11 +6,11 @@ import type {
   ResourceListParams,
   ResourceListResponse,
   ResourcePayload,
-} from './types'
+} from '@/api/types'
 
 const BASE = '/api/resources'
 
-function buildQuery(params: ResourceListParams): string {
+const buildQuery = (params: ResourceListParams): string => {
   const search = new URLSearchParams()
   if (params.page) search.set('page', String(params.page))
   if (params.pageSize) search.set('pageSize', String(params.pageSize))
@@ -21,61 +21,53 @@ function buildQuery(params: ResourceListParams): string {
   return query ? `?${query}` : ''
 }
 
-export function listResources(
+export const listResources = (
   params: ResourceListParams = {},
-): Promise<ResourceListResponse> {
-  return request<ResourceListResponse>(`${BASE}${buildQuery(params)}`)
-}
+): Promise<ResourceListResponse> =>
+  request<ResourceListResponse>(`${BASE}${buildQuery(params)}`)
 
-export function getResource(id: string): Promise<Resource> {
-  return request<Resource>(`${BASE}/${id}`)
-}
+export const getResource = (id: string): Promise<Resource> =>
+  request<Resource>(`${BASE}/${id}`)
 
-export function createResource(resourceName: string): Promise<Resource> {
-  return request<Resource>(BASE, {
+export const createResource = (resourceName: string): Promise<Resource> =>
+  request<Resource>(BASE, {
     method: 'POST',
     body: JSON.stringify({ resourceName }),
   })
-}
 
-export function updateBasicInfo(
+export const updateBasicInfo = (
   id: string,
   data: BasicInfo,
-): Promise<Resource> {
-  return request<Resource>(`${BASE}/${id}/basic-info`, {
+): Promise<Resource> =>
+  request<Resource>(`${BASE}/${id}/basic-info`, {
     method: 'PATCH',
     body: JSON.stringify(data),
   })
-}
 
-export function updateProjectDetails(
+export const updateProjectDetails = (
   id: string,
   data: ProjectDetails,
-): Promise<Resource> {
-  return request<Resource>(`${BASE}/${id}/project-details`, {
+): Promise<Resource> =>
+  request<Resource>(`${BASE}/${id}/project-details`, {
     method: 'PATCH',
     body: JSON.stringify(data),
   })
-}
 
 /** draft -> completed. Only valid status transition. */
-export function provisionResource(
+export const provisionResource = (
   id: string,
-): Promise<{ alreadyCompleted: boolean; resource: Resource }> {
-  return request(`${BASE}/${id}/provisioning`, { method: 'PATCH' })
-}
+): Promise<{ alreadyCompleted: boolean; resource: Resource }> =>
+  request(`${BASE}/${id}/provisioning`, { method: 'PATCH' })
 
 /** Full replace, allowed only for completed resources. */
-export function replaceResource(
+export const replaceResource = (
   id: string,
   data: ResourcePayload,
-): Promise<Resource> {
-  return request<Resource>(`${BASE}/${id}`, {
+): Promise<Resource> =>
+  request<Resource>(`${BASE}/${id}`, {
     method: 'PUT',
     body: JSON.stringify(data),
   })
-}
 
-export function deleteResource(id: string): Promise<Resource> {
-  return request<Resource>(`${BASE}/${id}`, { method: 'DELETE' })
-}
+export const deleteResource = (id: string): Promise<Resource> =>
+  request<Resource>(`${BASE}/${id}`, { method: 'DELETE' })
