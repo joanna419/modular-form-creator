@@ -3,7 +3,7 @@ import { toast } from 'sonner'
 import type { ProjectDetails } from '@/api'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
 import { LoadingState } from '@/features/resources/components/LoadingState'
-import { PageState } from '@/features/resources/components/PageState'
+import { ResourceLoadError } from '@/features/resources/components/ResourceLoadError'
 import { ProjectDetailsForm } from '@/features/resources/components/ProjectDetailsForm'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
 import { useResource } from '@/features/resources/hooks/useResource'
@@ -22,11 +22,7 @@ export const ProjectDetailsPage = () => {
   const buffer = useEditBuffer()
 
   if (isPending) return <LoadingState label="Loading resource" rows={2} />
-  if (isError) {
-    return (
-      <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
-    )
-  }
+  if (isError) return <ResourceLoadError error={error} />
 
   const isCompleted = resource.status === 'completed'
 

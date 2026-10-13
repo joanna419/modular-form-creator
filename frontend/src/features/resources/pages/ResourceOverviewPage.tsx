@@ -8,7 +8,7 @@ import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { LoadingState } from '@/features/resources/components/LoadingState'
 import { ModuleCard } from '@/features/resources/components/ModuleCard'
 import { ModuleProgress } from '@/features/resources/components/ModuleProgress'
-import { PageState } from '@/features/resources/components/PageState'
+import { ResourceLoadError } from '@/features/resources/components/ResourceLoadError'
 import { PendingChangesBar } from '@/features/resources/components/PendingChangesBar'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
@@ -38,11 +38,7 @@ export const ResourceOverviewPage = () => {
   const buffer = useEditBuffer()
 
   if (isPending) return <LoadingState label="Loading resource" rows={2} />
-  if (isError) {
-    return (
-      <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
-    )
-  }
+  if (isError) return <ResourceLoadError error={error} />
 
   const isDraft = resource.status === 'draft'
   const basicComplete = isBasicInfoComplete(resource.basicInfo)

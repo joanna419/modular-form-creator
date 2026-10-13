@@ -4,7 +4,7 @@ import type { BasicInfo } from '@/api'
 import { BasicInfoForm } from '@/features/resources/components/BasicInfoForm'
 import { ModulePageLayout } from '@/features/resources/components/ModulePageLayout'
 import { LoadingState } from '@/features/resources/components/LoadingState'
-import { PageState } from '@/features/resources/components/PageState'
+import { ResourceLoadError } from '@/features/resources/components/ResourceLoadError'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
 import { useResource } from '@/features/resources/hooks/useResource'
 import { useUpdateBasicInfo } from '@/features/resources/hooks/useResourceMutations'
@@ -21,11 +21,7 @@ export const BasicInfoPage = () => {
   const buffer = useEditBuffer()
 
   if (isPending) return <LoadingState label="Loading resource" rows={2} />
-  if (isError) {
-    return (
-      <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
-    )
-  }
+  if (isError) return <ResourceLoadError error={error} />
 
   const isCompleted = resource.status === 'completed'
   const backToOverview = () => navigate(paths.resource(resourceId))

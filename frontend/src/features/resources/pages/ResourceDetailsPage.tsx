@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ModuleSummary } from '@/features/resources/components/ModuleSummary'
 import { LoadingState } from '@/features/resources/components/LoadingState'
-import { PageState } from '@/features/resources/components/PageState'
+import { ResourceLoadError } from '@/features/resources/components/ResourceLoadError'
 import { StatusBadge } from '@/features/resources/components/StatusBadge'
 import { useEditBuffer } from '@/features/resources/hooks/useEditBuffer'
 import { useResource } from '@/features/resources/hooks/useResource'
@@ -15,7 +15,6 @@ import {
   getOptionLabel,
   PRIORITY_OPTIONS,
 } from '@/features/resources/lib/constants'
-import { getErrorMessage } from '@/features/resources/lib/errors'
 import { paths } from '@/routes/paths'
 
 /** Read-only summary of persisted data (buffered edits are not shown here). */
@@ -25,11 +24,7 @@ export const ResourceDetailsPage = () => {
   const buffer = useEditBuffer()
 
   if (isPending) return <LoadingState label="Loading resource" rows={2} />
-  if (isError) {
-    return (
-      <PageState isError>{getErrorMessage(error, 'Failed to load resource.')}</PageState>
-    )
-  }
+  if (isError) return <ResourceLoadError error={error} />
 
   const { basicInfo, projectDetails } = resource
 

@@ -4,6 +4,7 @@ import { ProjectDetailsPage } from '@/features/resources/pages/ProjectDetailsPag
 import { ResourceDetailsPage } from '@/features/resources/pages/ResourceDetailsPage'
 import { ResourceOverviewPage } from '@/features/resources/pages/ResourceOverviewPage'
 import { ResourcesListPage } from '@/features/resources/pages/ResourcesListPage'
+import { NotFoundPage } from '@/routes/NotFoundPage'
 import { paths } from '@/routes/paths'
 import { RootLayout } from '@/routes/RootLayout'
 
@@ -26,6 +27,7 @@ export const router = createBrowserRouter([
         path: 'resources/:resourceId/project-details',
         element: <ProjectDetailsPage />,
       },
+      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ])
