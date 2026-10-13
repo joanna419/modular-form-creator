@@ -1,16 +1,25 @@
-import { Link, Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation, useMatches } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import styled, { useTheme } from 'styled-components'
 import { fadeInUp } from '@/app/animations'
 import { media } from '@/app/media'
 import { paths } from '@/routes/paths'
 
+/** Per-route layout flags, set via the route's `handle`. */
+export interface RouteHandle {
+  /** Desktop: the page fills the viewport and scrolls only its own region. */
+  fillViewport?: boolean
+}
+
 export const RootLayout = () => {
   const { pathname } = useLocation()
   const theme = useTheme()
+  const fillViewport = useMatches().some(
+    (match) => (match.handle as RouteHandle | undefined)?.fillViewport,
+  )
 
   return (
-    <>
+    <Shell>
       <Header>
         <HeaderInner>
           <Brand to={paths.resources}>
@@ -19,10 +28,12 @@ export const RootLayout = () => {
           </Brand>
         </HeaderInner>
       </Header>
-      {/* Keyed by path so the entrance animation replays on navigation. */}
-      <Main key={pathname}>
-        <Outlet />
-      </Main>
+      {/* Keyed by path so the entrance animation replays and scroll resets on navigation. */}
+      <Content key={pathname}>
+        <Main $fillViewport={fillViewport}>
+          <Outlet />
+        </Main>
+      </Content>
       {/* Action feedback (success / server errors). Field errors stay inline. */}
       <Toaster
         position="bottom-right"
@@ -35,14 +46,29 @@ export const RootLayout = () => {
           },
         }}
       />
-    </>
+    </Shell>
   )
 }
+
+// Desktop: an app shell exactly the viewport's height — the header stays put and
+// only the content area scrolls. Mobile keeps the regular page scroll.
+const Shell = styled.div`
+  ${media.desktop} {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    /* The entrance animation briefly shifts the content down; never let that
+       turn into a page-level scrollbar. */
+    overflow: hidden;
+  }
+`
 
 const Header = styled.header`
   position: sticky;
   top: 0;
   z-index: 10;
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
@@ -80,13 +106,26 @@ const Logo = styled.span`
   box-shadow: ${({ theme }) => theme.shadows.card};
 `
 
-const Main = styled.main`
+const Content = styled.div`
+  /* No fill-mode on purpose: a filling transform animation would keep this
+     element a containing block for position: fixed descendants after it ends. */
+  animation: ${fadeInUp} 0.3s ease;
+
+  ${media.desktop} {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+  }
+`
+
+const Main = styled.main<{ $fillViewport: boolean }>`
   max-width: 960px;
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.xl};
-  /* No fill-mode on purpose: a filling transform animation would keep <main> a
-     containing block for position: fixed (the Drawer overlay) after it ends. */
-  animation: ${fadeInUp} 0.3s ease;
+
+  ${media.desktop} {
+    ${({ $fillViewport }) => ($fillViewport ? 'height: 100%;' : '')}
+  }
 
   ${media.mobile} {
     padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.md};

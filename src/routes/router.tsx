@@ -6,14 +6,18 @@ import { ResourceOverviewPage } from '@/features/resources/pages/ResourceOvervie
 import { ResourcesListPage } from '@/features/resources/pages/ResourcesListPage'
 import { NotFoundPage } from '@/routes/NotFoundPage'
 import { paths } from '@/routes/paths'
-import { RootLayout } from '@/routes/RootLayout'
+import { RootLayout, type RouteHandle } from '@/routes/RootLayout'
 
 export const router = createBrowserRouter([
   {
     element: <RootLayout />,
     children: [
       { index: true, element: <Navigate to={paths.resources} replace /> },
-      { path: 'resources', element: <ResourcesListPage /> },
+      {
+        path: 'resources',
+        element: <ResourcesListPage />,
+        handle: { fillViewport: true } satisfies RouteHandle,
+      },
       { path: 'resources/:resourceId', element: <ResourceOverviewPage /> },
       {
         path: 'resources/:resourceId/details',

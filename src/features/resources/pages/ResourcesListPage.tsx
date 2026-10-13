@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import styled from 'styled-components'
+import { media } from '@/app/media'
 import type { Resource, ResourceListParams } from '@/api'
 import { ConfirmDialog } from '@/features/resources/components/ConfirmDialog'
 import { CreateResourceForm } from '@/features/resources/components/CreateResourceForm'
@@ -58,7 +59,7 @@ export const ResourcesListPage = () => {
   const hasFilters = Boolean(debouncedName.trim() || status)
 
   return (
-    <>
+    <Page>
       <Header>
         <h1>Resources</h1>
         <Subtitle>
@@ -84,29 +85,31 @@ export const ResourcesListPage = () => {
         }}
       />
 
-      {isPending ? (
-        <LoadingState label="Loading resources" />
-      ) : isError ? (
-        <PageState isError>
-          {getErrorMessage(error, 'Failed to load resources.')}
-        </PageState>
-      ) : items.length === 0 ? (
-        <PageState>
-          {hasFilters
-            ? 'No resources match your filters.'
-            : 'No resources yet. Create the first one above.'}
-        </PageState>
-      ) : (
-        <List>
-          {items.map((resource) => (
-            <ResourceCard
-              key={resource._id}
-              resource={resource}
-              onDelete={setResourceToDelete}
-            />
-          ))}
-        </List>
-      )}
+      <ListArea>
+        {isPending ? (
+          <LoadingState label="Loading resources" />
+        ) : isError ? (
+          <PageState isError>
+            {getErrorMessage(error, 'Failed to load resources.')}
+          </PageState>
+        ) : items.length === 0 ? (
+          <PageState>
+            {hasFilters
+              ? 'No resources match your filters.'
+              : 'No resources yet. Create the first one above.'}
+          </PageState>
+        ) : (
+          <List>
+            {items.map((resource) => (
+              <ResourceCard
+                key={resource._id}
+                resource={resource}
+                onDelete={setResourceToDelete}
+              />
+            ))}
+          </List>
+        )}
+      </ListArea>
 
       {data && (
         <Pagination
@@ -131,9 +134,30 @@ export const ResourcesListPage = () => {
         onConfirm={confirmDelete}
         onClose={() => setResourceToDelete(null)}
       />
-    </>
+    </Page>
   )
 }
+
+// Desktop: the page fills the layout height and only the list region scrolls;
+// title, create form, filters and pagination stay in place.
+const Page = styled.div`
+  ${media.desktop} {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+`
+
+const ListArea = styled.div`
+  ${media.desktop} {
+    flex: 1;
+    min-height: 240px;
+    overflow-y: auto;
+    /* Room for the cards' hover lift and shadow inside the scroll box. */
+    margin: 0 -8px;
+    padding: 4px 8px 12px;
+  }
+`
 
 const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
