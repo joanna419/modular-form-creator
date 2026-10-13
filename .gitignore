@@ -25,6 +25,3 @@ dist-ssr
 
 *storybook.log
 storybook-static
-
-# Claude Code local tooling
-.claude
