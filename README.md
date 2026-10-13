@@ -60,8 +60,13 @@ npm install
 npm run dev
 ```
 
-The dev server also uses port `5173` (the backend's allowed CORS origin), so stop
-the frontend container first if it is running: `docker compose stop frontend`.
+The dev server also uses port `5173` (the backend's allowed CORS origin). Run either
+the frontend container or `npm run dev`, not both: they can bind the same port on
+IPv4 and IPv6 at once, and `localhost` then silently serves the (slower,
+unbundled) dev server. Stop the container first with `docker compose stop frontend`.
+
+The dev server is meant for development (unbundled modules, development React
+build). Judge load performance on the Docker/production build.
 
 The app talks to the backend at `VITE_API_URL` (defaults to
 `http://localhost:5001`). To override it, copy the example env file and edit it:

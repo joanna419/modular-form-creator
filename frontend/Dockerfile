@@ -4,7 +4,9 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci
+# Reuse the npm download cache across builds: when dependencies change, only
+# new/updated packages are fetched instead of the whole tree again.
+RUN --mount=type=cache,target=/root/.npm npm ci
 
 COPY . .
 

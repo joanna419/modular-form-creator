@@ -17,6 +17,17 @@ export default defineConfig({
       '@': path.resolve(dirname, 'src'),
     },
   },
+  server: {
+    // The backend only allows CORS from :5173 — fail loudly instead of
+    // silently moving to another port where every API call would be blocked.
+    port: 5173,
+    strictPort: true,
+    // Transform the entry (and its import graph) right after the dev server
+    // starts, so the first page load does not wait for on-demand compilation.
+    warmup: {
+      clientFiles: ['./src/main.tsx'],
+    },
+  },
   test: {
     projects: [{
       extends: true,

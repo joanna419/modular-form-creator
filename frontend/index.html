@@ -4,10 +4,63 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>modular-form-creator</title>
+    <meta name="theme-color" content="#1f7a8c" />
+    <title>Resources Management</title>
+
+    <!--
+      The design system loads its fonts with @import inside GlobalStyles, i.e. only
+      after the JS bundle has run. Requesting the same stylesheet here starts the
+      download in parallel with the bundle; the later @import hits the browser cache.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&amp;family=Source+Sans+3:wght@400;500;600&amp;display=swap"
+    />
+
+    <!-- Boot screen shown until React renders (it replaces #root's content). -->
+    <style>
+      .boot {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 16px;
+        background: linear-gradient(180deg, #fefcf8 0%, #f4f3ef 100%);
+        color: #5e6c76;
+        font: 500 1rem/1.4 'Source Sans 3', 'Segoe UI', sans-serif;
+      }
+      .boot__logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #1f7a8c, #e38b2c);
+        box-shadow: 0 16px 32px -24px rgba(18, 33, 43, 0.45);
+        animation: boot-pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes boot-pulse {
+        50% {
+          transform: scale(0.88);
+          opacity: 0.7;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot__logo {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="status">
+        <div class="boot__logo" aria-hidden="true"></div>
+        Loading Resources Management…
+      </div>
+    </div>
+    <noscript>This application requires JavaScript.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
