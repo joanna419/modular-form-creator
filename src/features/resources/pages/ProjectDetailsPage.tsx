@@ -61,7 +61,10 @@ export const ProjectDetailsPage = () => {
       title="Project Details"
       notice={isCompleted ? COMPLETED_EDIT_NOTICE : undefined}
     >
+      {/* Keyed by updatedAt: React Hook Form reads defaultValues only on mount, so
+          remount when fresher server data arrives instead of submitting stale values. */}
       <ProjectDetailsForm
+        key={resource.updatedAt}
         defaultValues={projectDetails}
         submitLabel={isCompleted ? 'Apply changes' : 'Save Project Details'}
         isSubmitting={update.isPending}

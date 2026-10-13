@@ -2,6 +2,7 @@ import { Link, Outlet, useLocation, useMatches } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import styled, { useTheme } from 'styled-components'
 import { fadeInUp } from '@/app/animations'
+import { APP_SHELL_ID } from '@/app/appShell'
 import { media } from '@/app/media'
 import { paths } from '@/routes/paths'
 
@@ -19,22 +20,25 @@ export const RootLayout = () => {
   )
 
   return (
-    <Shell>
-      <Header>
-        <HeaderInner>
-          <Brand to={paths.resources}>
-            <Logo aria-hidden="true" />
-            Resources Management
-          </Brand>
-        </HeaderInner>
-      </Header>
-      {/* Keyed by path so the entrance animation replays and scroll resets on navigation. */}
-      <Content key={pathname}>
-        <Main $fillViewport={fillViewport}>
-          <Outlet />
-        </Main>
-      </Content>
-      {/* Action feedback (success / server errors). Field errors stay inline. */}
+    <>
+      <Shell id={APP_SHELL_ID}>
+        <Header>
+          <HeaderInner>
+            <Brand to={paths.resources}>
+              <Logo aria-hidden="true" />
+              Resources Management
+            </Brand>
+          </HeaderInner>
+        </Header>
+        {/* Keyed by path so the entrance animation replays and scroll resets on navigation. */}
+        <Content key={pathname}>
+          <Main $fillViewport={fillViewport}>
+            <Outlet />
+          </Main>
+        </Content>
+      </Shell>
+      {/* Action feedback (success / server errors). Field errors stay inline.
+          Outside the shell so toasts stay usable while a modal makes the shell inert. */}
       <Toaster
         position="bottom-right"
         richColors
@@ -46,7 +50,7 @@ export const RootLayout = () => {
           },
         }}
       />
-    </Shell>
+    </>
   )
 }
 

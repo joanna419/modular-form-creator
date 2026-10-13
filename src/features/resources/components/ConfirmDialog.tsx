@@ -1,6 +1,7 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import styled from 'styled-components'
+import { APP_SHELL_ID } from '@/app/appShell'
 import { Button, Drawer } from '@/design-system'
 
 interface ConfirmDialogProps {
@@ -23,14 +24,35 @@ export const ConfirmDialog = ({
   isBusy = false,
   onConfirm,
   onClose,
-}: ConfirmDialogProps) =>
-  // Portal to <body>: ancestors (e.g. the animated <main>) cannot affect the fixed overlay.
-  createPortal(
-    <DrawerLayer>
+}: ConfirmDialogProps) => {
+  const layerRef = useRef<HTMLDivElement>(null)
+
+  // Modal behaviour the design-system Drawer does not provide: focus moves into
+  // the dialog (Cancel — the safe default for an irreversible action), the app
+  // behind becomes inert (no focus, clicks or screen-reader access) and focus
+  // returns to the element that opened the dialog when it closes.
+  useEffect(() => {
+    if (!isOpen) return
+
+    const trigger =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const appShell = document.getElementById(APP_SHELL_ID)
+    appShell?.setAttribute('inert', '')
+    layerRef.current?.querySelector<HTMLElement>('[data-autofocus]')?.focus()
+
+    return () => {
+      appShell?.removeAttribute('inert')
+      if (trigger?.isConnected) trigger.focus()
+    }
+  }, [isOpen])
+
+  // Portal to <body>: ancestors (e.g. the animated content) cannot affect the fixed overlay.
+  return createPortal(
+    <DrawerLayer ref={layerRef}>
       <Drawer title={title} isOpen={isOpen} onClose={onClose}>
         <Message>{message}</Message>
         <Actions>
-          <Button variant="ghost" onClick={onClose} disabled={isBusy}>
+          <Button data-autofocus variant="ghost" onClick={onClose} disabled={isBusy}>
             Cancel
           </Button>
           <Button onClick={onConfirm} disabled={isBusy}>
@@ -41,6 +63,7 @@ export const ConfirmDialog = ({
     </DrawerLayer>,
     document.body,
   )
+}
 
 /*
  * The design-system Drawer stays mounted when closed, with its panel translated

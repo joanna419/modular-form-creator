@@ -54,7 +54,10 @@ export const BasicInfoPage = () => {
       title="Basic Info"
       notice={isCompleted ? COMPLETED_EDIT_NOTICE : undefined}
     >
+      {/* Keyed by updatedAt: React Hook Form reads defaultValues only on mount, so
+          remount when fresher server data arrives instead of submitting stale values. */}
       <BasicInfoForm
+        key={resource.updatedAt}
         resourceName={resourceName || resource.name}
         defaultValues={editableFields}
         submitLabel={isCompleted ? 'Apply changes' : 'Save Basic Info'}
