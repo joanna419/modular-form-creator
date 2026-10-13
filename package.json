@@ -11,7 +11,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "typecheck": "tsc -b",
-    "prepare": "cd .. && husky frontend/.husky || true"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.104.2",

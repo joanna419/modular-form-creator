@@ -6,12 +6,20 @@ lifecycle (`draft` → `completed`).
 
 ## Project structure
 
+The layout of the provided starter is kept: the frontend lives at the repository
+root and the assignment work is in `src/`.
+
 ```
 modular-form-creator/
-├── backend/            # Provided Express + MongoDB API (not modified)
-├── frontend/           # React + TypeScript + Vite app (the assignment work)
-├── docker-compose.yml  # Full stack: frontend + backend + MongoDB
-└── README.md
+├── backend/               # Provided Express + MongoDB API (not modified)
+├── src/
+│   ├── design-system/     # Provided design system (not modified)
+│   ├── api/               # HTTP client, endpoint functions, domain types
+│   ├── app/               # Query client, global app styles, breakpoints
+│   ├── features/resources # Pages, components, hooks, business rules
+│   └── routes/            # Router, layout, paths
+├── Dockerfile, nginx.conf # Frontend image (build + static serving)
+└── docker-compose.yml     # Full stack: frontend + backend + MongoDB
 ```
 
 - Backend API contract: [backend/README.md](backend/README.md)
@@ -55,7 +63,6 @@ Start only the backend and MongoDB, then the Vite dev server:
 
 ```bash
 docker compose up -d backend
-cd frontend
 npm install
 npm run dev
 ```
@@ -87,7 +94,7 @@ cp .env.example .env
 
 ## Frontend scripts
 
-Run these from `frontend/`:
+Run these from the repository root:
 
 ```bash
 npm run dev        # start the dev server
@@ -102,4 +109,4 @@ npm run storybook  # design system stories
 
 A [Husky](https://typicode.github.io/husky/) pre-commit hook runs `lint`,
 `typecheck` and `build` before every commit and blocks the commit if any of
-them fails. It is installed automatically by `npm install` in `frontend/`.
+them fails. It is installed automatically by `npm install`.

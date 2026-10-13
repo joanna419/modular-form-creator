@@ -1,9 +1,14 @@
+# Build context is the repo root: send only what the frontend image needs.
+.git
+.claude
+.husky
+backend
 # Host node_modules contain macOS binaries — dependencies are installed in the image.
 node_modules
 dist
 storybook-static
-.husky/_
 *.log
+.DS_Store
 # The API URL comes from the VITE_API_URL build arg, not from a local .env.
 .env
 .env.*
